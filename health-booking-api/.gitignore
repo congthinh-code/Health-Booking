@@ -1,0 +1,35 @@
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bsearch/
+gprof/
+[Bb]in/
+[Oo]bj/
+[Ex]it/
+
+## Visual Studio 2015/2017/2019/2022/2026 cache directory
+.vs/
+
+## --- PHẦN BỔ SUNG ĐỂ TỐI ƯU HƠN ---
+
+# Lưu trữ bảo mật mã nguồn .NET
+.microsoft.dotnet.secrets/
+
+# Tránh lộ cấu hình Database và Mật khẩu ở máy cá nhân
+appsettings.Development.json
+
+# File rác hệ điều hành
+Thumbs.db
+.DS_Store
