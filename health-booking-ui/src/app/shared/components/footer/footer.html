@@ -1,1 +1,90 @@
-<p>footer works!</p>
+<footer class="footer">
+  <div class="footer-main">
+
+    <div class="footer-left">
+      <a routerLink="/">
+        <h2 class="logo">
+          <img src="assets/images/logo.png" alt="Logo HealthBooking">
+        </h2>
+      </a>
+
+      <p class="slogan">Đặt khám nhanh - Uy tín - Chất lượng</p>
+      <p><strong>Địa chỉ:</strong> Thành phố Quy Nhơn, Bình Định</p>
+      <p><strong>Website:</strong> HealthBooking.com</p>
+      <p><strong>Email:</strong> admin@HealthBooking.com</p>
+      <p><strong>Điện thoại:</strong> 1900 2005</p>
+    </div>
+
+    <div class="footer-right">
+
+      <div class="footer-top-row">
+
+        <div class="footer-col">
+          <h3>Dịch vụ Y tế</h3>
+          <ul>
+            <li *ngFor="let dv of dichVu">
+              <a [routerLink]="dv.link">{{ dv.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Cơ sở y tế</h3>
+          <ul>
+            <li *ngFor="let cs of coSo">
+              <a [routerLink]="cs.link">{{ cs.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Hướng dẫn</h3>
+          <ul>
+            <li *ngFor="let hd of huongDan">
+              <a [routerLink]="hd.link">{{ hd.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom-row">
+
+        <div class="footer-col">
+          <h3>Liên hệ hợp tác</h3>
+          <ul>
+            <li *ngFor="let lh of lienHe">
+              <a [routerLink]="lh.link">{{ lh.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Về Trang chủ</h3>
+          <ul>
+            <li *ngFor="let tc of trangChu">
+              <a [routerLink]="tc.link">{{ tc.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+<div class="footer-logos">
+  <img src="assets/images/footer/dadangky.webp">
+  <img src="assets/images/footer/bocongthuong.webp">
+  <img src="assets/images/footer/icon_ios.svg">
+  <img src="assets/images/footer/icon_google_play.svg">
+</div>
+
+<div class="footer-bottom">
+  © 2020 - Bản quyền thuộc Công Ty Cổ Phần Ứng Dụng HealthBooking
+</div>
+
+<!-- <a href="tel:0123456789" class="phone-button">
+  <i class="fas fa-phone"></i>
+</a> -->
