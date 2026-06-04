@@ -1,0 +1,189 @@
+/*reset cơ bản và định dạng chung*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: #ffffff;
+    color: #333;
+}
+
+.footer {
+    background: #ffffff;
+    color: #333;
+    border-top: 1px solid #eeeeee;
+    padding-top: 40px;
+}
+
+.footer-main {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 0 20px 40px;
+}
+
+.footer-left {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+}
+
+    .footer-left .logo img {
+        max-width: 100%;
+        height: auto;
+        max-height: 80px;
+        object-fit: contain;
+        margin-bottom: 12px;
+    }
+
+    .footer-left .slogan {
+        color: #00b7f1;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .footer-left p {
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+        .footer-left p strong {
+            color: #333;
+        }
+
+.footer-right {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column; 
+    gap: 40px;
+}
+
+.footer-top-row,
+.footer-bottom-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    align-items: start;
+}
+
+.footer-col h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #111;
+    border-bottom: 2px solid #00b7f1; 
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+    .footer-col ul li {
+        margin-bottom: 10px;
+    }
+
+        .footer-col ul li a,
+        .footer-col ul li a:link,
+        .footer-col ul li a:visited {
+            color: #555 !important;
+            text-decoration: none !important;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+            .footer-col ul li a:hover,
+            .footer-col ul li a:active,
+            .footer-col ul li a:focus {
+                color: #00b7f1 !important; 
+            }
+
+.footer-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    background: #ffffff;
+    padding: 25px 0;
+    border-top: 1px solid #eeeeee;
+}
+
+    .footer-logos img {
+        height: 38px;
+        display: block;
+        transition: transform 0.2s ease;
+    }
+
+        .footer-logos img:hover {
+            transform: scale(1.05); 
+        }
+
+.footer-bottom {
+    width: 100%;
+    background: #00b7f1;
+    text-align: center;
+    padding: 15px 20px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.phone-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #00b7f1;
+    color: #ffffff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+    .phone-button:hover {
+        background: #008ec2;
+        transform: scale(1.1);
+    }
+
+@media (max-width: 992px) {
+    .footer-main {
+        flex-direction: column; 
+        gap: 35px;
+    }
+
+    .footer-left {
+        max-width: 100%; 
+    }
+}
+
+@media (max-width: 650px) {
+    .footer-top-row,
+    .footer-bottom-row {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 25px;
+    }
+}
+
+@media (max-width: 400px) {
+    .footer-top-row,
+    .footer-bottom-row {
+        grid-template-columns: 1fr; 
+    }
+}

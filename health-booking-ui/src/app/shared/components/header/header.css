@@ -1,0 +1,275 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+}
+
+/* Layout container */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 60px;
+}
+
+/* Logo */
+.logo img {
+  max-height: 65px;
+  width: auto;
+  display: block;
+  cursor: pointer;
+}
+
+/* Right section (chia 2 hàng) */
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 40px;
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.social {
+  display: flex;
+  gap: 12px;
+}
+
+.social a {
+  text-decoration: none;
+  color: #0a2a43;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.social a:hover { color: #0077cc; }
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar bo tròn */
+#header-avatar {
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: cover !important;
+  border: 2px solid #e0e0e0;
+  display: block;
+  flex-shrink: 0;
+}
+
+#header-avatar:hover {
+  border-color: #7b4397;
+  transition: border-color 0.3s;
+}
+
+/* Nút */
+.btn-outline {
+  border: 1px solid #009fe3;
+  color: #009fe3;
+  padding: 6px 16px;
+  border-radius: 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.btn-outline:hover { background: #e3f2fd; }
+
+/* Ngôn ngữ */
+.lang { position: relative; cursor: pointer; font-size: 14px; }
+
+.lang-selected {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #ccc;
+  padding: 4px 10px;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.lang-selected img {
+  width: 22px;
+  height: 15px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.lang-selected i { font-size: 12px; color: #333; }
+
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: 110%; left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  min-width: 150px;
+  z-index: 200;
+}
+
+.lang-menu a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.lang-menu a img {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.lang-menu a:hover {
+  background: #f5f5f5;
+  color: #0077cc;
+}
+
+.lang:hover .lang-menu { display: block; }
+
+/* Main bar */
+.main-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+/* Khối Hotline tổng */
+.hotline {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Khoảng cách giữa icon và chữ */
+  cursor: pointer;
+}
+
+/* Icon headset */
+.hotline i {
+  color: #ff4d4d; /* Màu đỏ sáng hơn chút */
+  font-size: 24px;
+  background: #fff5f5; /* Thêm nền hồng nhạt cho icon nếu muốn giống mẫu */
+  padding: 8px;
+border-radius: 50%;
+}
+
+/* Cụm chữ bên phải icon */
+.hotline-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Chữ "HỖ TRỢ ĐẶT KHÁM" */
+.hotline p {
+  font-size: 12px;
+  font-weight: 700; /* Đậm lên */
+  color: #002244;
+  margin: 0 0 2px 0; /* Tạo khoảng cách 2px với con số bên dưới */
+  letter-spacing: 0.5px; /* Giúp các chữ cái tách nhau ra cho dễ đọc */
+  text-transform: uppercase;
+}
+
+/* Số điện thoại 1900 2005 */
+.hotline span {
+  color: #f57f17;
+  font-size: 18px;
+  font-weight: 500; /* Cực đậm để nổi bật */
+  line-height: 1; /* Để không bị chiếm khoảng trống thừa */
+}
+
+/* Menu */
+nav { display: flex; gap: 28px; }
+
+nav a {
+  text-decoration: none;
+  color: #0a2a43;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+nav a:hover { color: #0077cc; }
+
+.dropdown { position: relative; }
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%; left: 0;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  min-width: 200px;
+  padding: 8px 0;
+  z-index: 100;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 18px;
+  color: #333;
+  font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+  background: #f0f0f0;
+  color: #0077cc;
+}
+
+.dropdown:hover .dropdown-menu { display: block; }
+
+/* Notice chạy chữ */
+
+.notice {
+  background: #ffa726;
+  color: white;
+  padding: 10px 60px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.marquee {
+  display: flex;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.marquee span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 50px;
+  animation: scroll 10s linear infinite;
+}
+
+.marquee i { color: white; }
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+} 
