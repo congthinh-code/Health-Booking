@@ -1,0 +1,143 @@
+<!-- MENU TAB -->
+<div class="tab-container">
+    <a routerLink="/pages/csyt"
+       routerLinkActive="active"
+       class="tab-item">
+        Cơ sở y tế
+    </a>
+
+    <a routerLink="/pages/qc"
+       routerLinkActive="active"
+       class="tab-item">
+        Quảng cáo
+    </a>
+
+    <a routerLink="/pages/LH/td"
+       routerLinkActive="active"
+       class="tab-item">
+        Tuyển dụng
+    </a>
+</div>
+
+<!-- BANNER SECTION -->
+<section class="banner-section">
+    <div class="banner-content">
+        <h1>Quảng cáo với HealthBooking</h1>
+        <p>Nền tảng công nghệ kết nối khách hàng với các cơ sở y tế hàng đầu tại Việt Nam</p>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Intro Section -->
+    <section class="intro-section">
+        <div class="intro-content">
+            <h2>Về HealthBooking</h2>
+            <p>HealthBooking là nền tảng công nghệ kết nối người dân với Cơ sở - Dịch vụ Y tế hàng đầu tại Việt Nam, mang lại giải pháp tiếp cận khách hàng tiềm năng và phù hợp nhu cầu thực tế. Chúng tôi cung cấp các gói quảng cáo linh hoạt để giúp bệnh viện, phòng khám, bác sĩ và các dịch vụ y tế khác tăng cường hiện diện trực tuyến và thu hút bệnh nhân.</p>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="partners-section">
+        <h2>Hệ thống Cơ sở Y tế triển khai</h2>
+
+        <div class="partners-grid">
+            @for (hospital of hospitals; track hospital.name) {
+                <div class="partner-item">
+                    <!-- Binding background-image chuẩn Angular style -->
+                    <div class="partner-img"
+                         [style.backgroundImage]="'url(' + hospital.image + ')'">
+                    </div>
+
+                    <h3>{{ hospital.name }}</h3>
+                    <p>{{ hospital.address }}</p>
+
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        {{ hospital.rating }}
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+<!-- Contact & Registration -->
+<section class="contact-section">
+    <h2>Liên hệ & Đăng ký quảng cáo</h2>
+    <div class="contact-wrapper">
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="info-content">
+                    <h3>Liên hệ tư vấn</h3>
+                    <a href="tel:0000000000">0000 000 000</a>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="info-content">
+                    <h3>Địa chỉ</h3>
+                    <p>Thành phố Quy Nhơn, Bình Định</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="info-content">
+                    <h3>Email</h3>
+                    <a href="mailto:quangcao@healthbooking.com">quangcao@healthbooking.com</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="registration-form" id="registrationForm">
+            <h3>Đăng ký quảng cáo</h3>
+            <!-- Dùng ngSubmit của Angular để quản lý việc gửi form dữ liệu -->
+            <form (submit)="onSubmit($event)">
+                <div class="form-group">
+                    <label for="name">Họ và tên<span class="required">*</span></label>
+                    <input type="text" id="name" name="name" [(ngModel)]="formData.name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Công ty<span class="required">*</span></label>
+                    <input type="text" id="company" name="company" [(ngModel)]="formData.company" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Số điện thoại<span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" [(ngModel)]="formData.phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="field">Lĩnh vực kinh doanh<span class="required">*</span></label>
+                    <select id="field" name="field" [(ngModel)]="formData.field" required>
+                        <option value="">-- Chọn lĩnh vực --</option>
+                        <option value="benh-vien">Bệnh viện</option>
+                        <option value="phong-kham">Phòng khám</option>
+                        <option value="nha-thuoc">Nhà thuốc</option>
+                        <option value="dung-cu-y-te">Dụng cụ y tế</option>
+                        <option value="dich-vu-y-te-khac">Dịch vụ y tế khác</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Nội dung yêu cầu</label>
+                    <textarea id="message" name="message" rows="4" [(ngModel)]="formData.message" placeholder="Mô tả chi tiết về nhu cầu quảng cáo của bạn..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Đăng ký ngay</button>
+            </form>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,85 @@
+<div class="tab-container">
+  <a routerLink="/pages/cdud" 
+     routerLinkActive="active" 
+     class="tab-item">
+    Cài đặt ứng dụng
+  </a>
+
+  <a routerLink="/pages/qthp" 
+     routerLinkActive="active" 
+     class="tab-item">
+    Quy trình hoàn phí
+  </a>
+
+  <a routerLink="/pages/chtg" 
+     routerLinkActive="active" 
+     class="tab-item">
+    Câu hỏi thường gặp
+  </a>
+
+  <a routerLink="/pages/qtdk" 
+     routerLinkActive="active" 
+     class="tab-item">
+    Quy trình đi khám
+  </a>
+</div>
+
+<div class="container">
+  <div class="sidebar">
+    <div class="title">
+      <strong>Danh sách cơ sở y tế</strong>
+      <a class="view-all" href="javascript:void(0)" (click)="openModal()">
+        Xem tất cả
+      </a>
+    </div>
+
+    <div class="search-box">
+      <input type="text" placeholder="Tìm kiếm">
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="text-center">
+      <img src="assets/images/header/anhkinhlup.jpg" class="empty-img" alt="Kính lúp">
+      <h2>Vui lòng nhập cơ sở y tế để xem quy trình đi khám</h2>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal" *ngIf="isModalOpen" (click)="onOutsideClick($event)" style="display: flex;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Danh sách cơ sở y tế</h3>
+    </div>
+
+    <div class="modal-body">
+      <ul class="hospital-list">
+        <li *ngFor="let hospital of hospitals">{{ hospital }}</li>
+      </ul>
+    </div>
+
+    <span class="close-btn" (click)="closeModal()">×</span>
+  </div>
+</div>
+
+<section class="support-container">
+  <div class="support-left">
+    <img src="assets/images/header/anhbia.jpg" alt="Doctor" class="doctor-img">
+  </div>
+
+  <div class="support-right">
+    <h2>CÁC HÌNH THỨC HỖ TRỢ</h2>
+    <p class="hotline">1900-2005</p>
+
+    <div class="qr-group">
+      <div class="qr-item">
+        <img src="assets/images/header/qrZalo.jpg" alt="QR Zalo">
+        <p>Zalo</p>
+      </div>
+      <div class="qr-item">
+        <img src="assets/images/header/qrFB.jpg" alt="QR Facebook">
+        <p>Facebook</p>
+      </div>
+    </div>
+  </div>
+</section>

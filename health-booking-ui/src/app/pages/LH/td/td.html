@@ -1,0 +1,89 @@
+<div class="tab-container">
+    <a routerLink="/pages/csyt"
+       routerLinkActive="active"
+       class="tab-item">
+        Cơ sở y tế
+    </a>
+
+    <a routerLink="/pages/qc"
+       routerLinkActive="active"
+       class="tab-item">
+        Quảng cáo
+    </a>
+
+    <a routerLink="/pages/LH/td"
+       routerLinkActive="active"
+       class="tab-item">
+        Tuyển dụng 
+    </a>
+</div>
+
+<section class="banner-section">
+    <div class="banner-content">
+        <h1>Vị trí tuyển dụng</h1>
+
+        <input type="text"
+               id="search-job"
+               class="search-input"
+               [(ngModel)]="searchText"
+               (keyup.enter)="onSearch()"
+               placeholder="Tìm kiếm vị trí, công việc">
+
+        <select id="job-type" class="filter-select" [(ngModel)]="selectedType" (change)="onFilterChange()">
+            <option value="">Chọn tính chất công việc</option>
+            <option value="full-time">Full Time</option>
+            <option value="part-time">Part Time</option>
+            <option value="internship">Thực tập sinh</option>
+        </select>
+    </div>
+
+    <section class="jobs-section">
+        <div class="jobs-table-container">
+            <table class="jobs-table">
+                <thead>
+                    <tr>
+                        <th>Vị Trí</th>
+                        <th>Hình Thức Làm Việc</th>
+                        <th>Chi Tiết</th>
+                    </tr>
+                </thead>
+
+                <tbody id="jobs-tbody">
+                    @for (job of pagedJobs; track job.id) {
+                        <tr class="job-row">
+                            <td class="job-title">{{ job.title }}</td>
+                            <td class="job-type">
+                                <span class="type-badge" [ngClass]="job.type">
+                                    {{ getJobTypeLabel(job.type) }}
+                                </span>
+                            </td>
+                            <td>
+                                <a [routerLink]="['/pages/LH/job-detail', job.id]" class="btn-detail">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 20px; color: #888;">
+                                Không tìm thấy vị trí tuyển dụng phù hợp.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (totalPages > 1) {
+            <div class="pagination">
+                @for (page of totalPagesArray; track page) {
+                    <button class="page-btn" 
+                            [class.active]="page === currentPage" 
+                            (click)="goToPage(page)">
+                        {{ page }}
+                    </button>
+                }
+            </div>
+        }
+    </section>
+</section>

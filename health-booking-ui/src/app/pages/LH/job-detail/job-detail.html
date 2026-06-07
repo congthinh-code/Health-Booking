@@ -1,0 +1,89 @@
+<div class="job-detail-header">
+    <a routerLink="/pages/LH/td" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+
+    <h1>{{ currentJob?.title }}</h1>
+    <p>
+        @if (currentJob?.type?.toLowerCase() === 'full time' || currentJob?.type?.toLowerCase() === 'full-time') {
+            Full time
+        } @else if (currentJob?.type?.toLowerCase() === 'part time' || currentJob?.type?.toLowerCase() === 'part-time') {
+            Part time
+        } @else if (currentJob?.type?.toLowerCase() === 'internship') {
+            Thực tập sinh
+        } @else {
+            {{ currentJob?.type }}
+        }
+    </p>
+</div>
+
+<div class="job-detail-container">
+    <div class="job-detail-content">
+
+        <h2>Mô tả vị trí</h2>
+        <p>{{ currentJob?.description }}</p>
+
+        <h2>Yêu cầu</h2>
+        <ul>
+            <li>Có kinh nghiệm 2+ năm trong lĩnh vực tương ứng</li>
+            <li>Kỹ năng giao tiếp tốt</li>
+            <li>Sẵn sàng học hỏi và phát triển</li>
+            <li>Làm việc tốt trong nhóm</li>
+        </ul>
+
+        <h2>Quyền lợi</h2>
+        <ul>
+            <li>Lương cạnh tranh, thưởng hiệu suất</li>
+            <li>Bảo hiểm xã hội đầy đủ</li>
+            <li>Môi trường làm việc chuyên nghiệp</li>
+            <li>Cơ hội phát triển sự nghiệp</li>
+            <li>Đồng phục, cơm trưa miễn phí</li>
+        </ul>
+
+        <div class="apply-section">
+            <button class="apply-btn" (click)="openApplyModal()">
+                <i class="fas fa-paper-plane"></i> Ứng Tuyển Ngay
+            </button>
+        </div>
+
+    </div>
+</div>
+
+@if (isOpenModal) {
+    <div id="applyModal" class="modal" (click)="onOutsideClick($event)">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h2>Đơn ứng tuyển công việc</h2>
+                <span class="close" (click)="closeApplyModal()">&times;</span>
+            </div>
+
+            <form (submit)="onSubmitApply($event)">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" [(ngModel)]="applyForm.name" name="name" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" [(ngModel)]="applyForm.email" name="email" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" [(ngModel)]="applyForm.phone" name="phone" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Thư ứng tuyển</label>
+                    <textarea rows="5" [(ngModel)]="applyForm.coverLetter" name="coverLetter"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Gửi đơn ứng tuyển
+                </button>
+            </form>
+
+        </div>
+    </div>
+}
