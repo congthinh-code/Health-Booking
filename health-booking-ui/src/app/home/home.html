@@ -1,0 +1,74 @@
+<section class="hero">
+  <video autoplay muted loop playsinline class="hero-video">
+    <source src="assets/video/nen.mp4" type="video/mp4">
+  </video>
+
+  <div class="hero-content">
+    <h1>Đặt lịch khám nhanh chóng</h1>
+    
+    <div class="search-container">
+      <input type="text"
+               id="searchInput"
+               class="search"
+               placeholder="Tìm kiếm bác sĩ, chuyên khoa, bệnh viện...">
+
+        <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <ul class="hero-list">
+      <li>✔ Đặt khám nhanh - lấy số thứ tự online</li>
+      <li>✔ Đặt khám theo giờ - chọn khung giờ thuận tiện</li>
+      <li>✔ Hoàn tiền khi hủy khám</li>
+    </ul>
+
+    <button class="btn-book" disabled style="cursor: not-allowed;">
+        ĐẶT LỊCH NGAY
+    </button>
+  </div>
+</section>
+
+<section class="services">
+    <div class="container">
+        <div class="cards">
+            <a href="#">
+                <div class="card">
+                    📅
+                    <p>Đặt khám tại cơ sở</p>
+                </div>
+            </a>
+            <a href="#">
+                <div class="card">
+                    💊
+                    <p>Đặt khám chuyên khoa</p>
+                </div>
+            </a>
+            <a href="#">
+                <div class="card">
+                    👨‍⚕️
+                    <p>Đặt khám theo bác sĩ</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="specialties">
+    <h2>CHUYÊN KHOA</h2>
+    <div class="grid">
+        
+        @for (item of specialties; track item.label) {
+            <a class="item" 
+               href="https://medpro.vn/tim-kiem?kw={{ item.label }}&tab=subject&page=1" 
+               target="_blank" 
+               rel="noopener noreferrer">
+               
+                <img [src]="'assets/images/iconchuyenkhoa/' + item.fileName + '.png'" 
+                     [alt]="item.label" 
+                     (error)="$any($event.target).src='assets/images/logo.png'">
+                     
+                <p>{{ item.label }}</p>
+            </a>
+        }
+
+    </div>
+</section>
