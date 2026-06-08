@@ -1,0 +1,218 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #fdf0ed 0%, #f4f7f6 100%);
+  padding: 40px 20px;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.register-box {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+}
+
+.register-box h2 {
+  text-align: center;
+  color: #2b2d42;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Nhãn trường thông tin giống cấu trúc dangky.php */
+form label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  margin-top: 12px;
+  display: block;
+}
+
+form label:first-of-type {
+  margin-top: 0;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+}
+
+.input-group input, 
+.input-group select {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background-color: #f8fafc;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  color: #2d3748;
+}
+
+.input-group input:focus, 
+.input-group select:focus {
+  outline: none;
+  border-color: #f4978e;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(244, 151, 142, 0.15);
+}
+
+/* Nút Submit */
+.btn-submit {
+  background: linear-gradient(135deg, #f4978e 0%, #f08080 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 25px;
+  box-shadow: 0 4px 12px rgba(244, 151, 142, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 151, 142, 0.45);
+}
+
+/* ======================================== */
+/* POPUP OVERLAY ĐĂNG KÝ (Đồng bộ chuẩn dangky.php) */
+/* ======================================== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  position: relative;
+  animation: popupScaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popupScaleUp {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Nút X đóng popup góc trên bên phải */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #a0aec0;
+  cursor: pointer;
+}
+.close-btn:hover { color: #4a5568; }
+
+.popup-box h3 {
+  margin-top: 5px;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+/* Định dạng màu sắc riêng biệt cho từng loại Popup */
+.success-popup h3 { color: #2ecc71; }
+.error-popup h3 { color: #e74c3c; }
+
+.popup-message {
+  color: #4a5568;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* Khung làm nổi bật mã OTP */
+.verify-code-box {
+  background-color: #f0fff4;
+  border: 1.5px dashed #2ecc71;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #27ae60;
+  margin-bottom: 25px;
+}
+
+.verify-code-box strong {
+  font-size: 1.6rem;
+  letter-spacing: 3px;
+  display: block;
+  margin-top: 8px;
+  color: #2ecc71;
+}
+
+/* Cụm nút bấm phía dưới của Popup */
+.btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-action {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-action:hover { background-color: #27ae60; }
+
+.btn-close, .close-popup-btn {
+  background-color: #edf2f7;
+  color: #4a5568;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-close:hover, .close-popup-btn:hover { background-color: #e2e8f0; }
