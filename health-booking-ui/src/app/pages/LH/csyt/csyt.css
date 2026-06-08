@@ -663,6 +663,7 @@ a:focus {
     height: 200px;
     overflow: hidden;
     background: #f0f0f0;
+    pointer-events: auto !important;
 }
 
     .hospital-image img {
@@ -685,10 +686,12 @@ a:focus {
     justify-content: center;
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .hospital-card:hover .hospital-overlay {
     opacity: 1;
+    pointer-events: auto;
 }
 
 .overlay-btn {
@@ -726,32 +729,10 @@ a:focus {
     line-height: 1.5;
 }
 
-    .hospital-address i {
-        color: #667eea;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-.hospital-rating {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.stars {
-    display: flex;
-    gap: 3px;
-    color: #ffc107;
-}
-
-    .stars i {
-        font-size: 12px;
-    }
-
-.rating-value {
-    font-size: 13px;
-    color: #666;
-    font-weight: 600;
+.hospital-address i {
+    color: #667eea;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .no-hospitals {

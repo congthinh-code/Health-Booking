@@ -1,13 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
-interface Hospital {
-  name: string;
-  image: string;
-  address: string;
-  rating: number;
-}
+import { HospitalService } from '../../../core/services/hospital-service/hospital-service';
 
 @Component({
   selector: 'app-qc',
@@ -17,9 +11,9 @@ interface Hospital {
   styleUrl: './qc.css',
 })
 export class QC implements OnInit {
-  title = 'Hợp tác quảng cáo cùng HealthBooking';
+  allHospitals: any[] = [];   // Khai báo mảng gốc chứa toàn bộ data từ API
+  promoHospitals: any[] = []; // Khai báo mảng chứa 5 bệnh viện cắt ra để hiển thị
 
-  // Object lưu trữ thông tin form đăng ký quảng cáo
   formData = {
     name: '',
     company: '',
@@ -28,60 +22,79 @@ export class QC implements OnInit {
     message: ''
   };
 
-  // Dữ liệu Mock tạm thời hiển thị lên lưới đối tác giống trang CSYT
-  hospitals: Hospital[] = [
-    {
-      name: 'Bệnh viện Đa khoa Tỉnh Bình Định',
-      image: 'assets/images/hospital1.jpg',
-      address: 'Nguyễn Huệ, Trần Phú, Quy Nhơn, Bình Định',
-      rating: 4.8
-    },
-    {
-      name: 'Phòng khám Đa khoa Quốc tế',
-      image: 'assets/images/hospital2.jpg',
-      address: 'Thành phố Quy Nhơn, Bình Định',
-      rating: 4.7
-    }
-  ];
+  constructor(private hospitalService: HospitalService,
+              private cdr: ChangeDetectorRef) { }
 
-  constructor() { }
+  ngOnInit(): void { 
+    // Gọi API để lấy danh sách bệnh viện
+    this.hospitalService.getHospitals().subscribe({
+        next: (data: any) => {
+          if (data && data.length > 0) {
+            // 1. Map lại ảnh chuẩn xác bằng hàm check tên giống như bên CSYT
+            const mappedData = data.map((item: any) => {
+              return {
+                ...item,
+                image: this.getHospitalImageByTagName(item.name)
+              };
+            });
 
-  ngOnInit(): void { }
-
-  // Xử lý gửi biểu mẫu thay thế đoạn code tag script cũ
-  onSubmit(event: Event) {
-    event.preventDefault();
-
-    // Biểu thức chính quy kiểm tra số điện thoại (10-11 chữ số)
-    const phoneRegex = /^[0-9]{10,11}$/;
-    if (!phoneRegex.test(this.formData.phone)) {
-      alert('Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số)');
-      return;
+            // 2. CHỈ CẮT LẤY ĐÚNG 5 BỆNH VIỆN ĐẦU TIÊN
+            this.promoHospitals = mappedData.slice(0, 5);
+            
+            // 3. Ép Angular quét và cập nhật lại giao diện ngay lập tức
+            this.cdr.detectChanges();
+          }
+        }
+      });
     }
 
-    // Hiển thị thông báo thành công
-    alert('Cảm ơn bạn đã đăng ký! Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.');
+    onSubmit(event: Event): void {
+    event.preventDefault(); // Ngăn trang bị reload lại khi bấm nút
     
-    // Reset form về trạng thái trống
-    this.formData = {
-      name: '',
-      company: '',
-      phone: '',
-      field: '',
-      message: ''
-    };
+    console.log('Dữ liệu khách hàng đăng ký quảng cáo:', this.formData);
+    
+    // Test thử xem nhận data chưa
+    alert(`Chúc mừng ${this.formData.name} đã gửi yêu cầu đăng ký thành công!`);
+    
+    // Bạn có thể viết gọi API lưu form vào DB ở đây nếu cần thiết
   }
 
-  /**
-   * Mẹo mở rộng: Đoạn script cũ của bạn có hàm lắng nghe click vào các nút "Chọn gói" để điền sẵn tin nhắn.
-   * Nếu ở các component khác bạn cần tính năng đó, chỉ việc gọi hàm này:
-   * (click)="selectPackage('Tên gói')"
-   */
-  selectPackage(packageName: string) {
-    this.formData.message = `Tôi muốn đăng ký gói: ${packageName}`;
-    const element = document.getElementById('registrationForm');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    // Giữ lại hàm map ảnh chuẩn
+    getHospitalImageByTagName(hospitalName: string): string {
+    if (!hospitalName) return 'assets/images/anhbenhvien/bvdk.jpg';
+    
+    const nameLower = hospitalName.toLowerCase();
+
+    // So khớp từ khóa xuất hiện trong tên để gán đúng file ảnh trong thư mục của bạn
+    if (nameLower.includes('thu phúc')) {
+      return 'assets/images/anhbenhvien/dktp.jpg';
     }
+    if (nameLower.includes('bình định') && nameLower.includes('tỉnh')) {
+      return 'assets/images/anhbenhvien/bvdk.jpg';
+    }
+    if (nameLower.includes('hòa bình') || nameLower.includes('đa khoa')) {
+      return 'assets/images/anhbenhvien/bvhoabinh.jpg';
+    }
+    if (nameLower.includes('mắt')) {
+      return 'assets/images/anhbenhvien/bvmat.jpg';
+    }
+    if (nameLower.includes('quy nhơn') && (nameLower.includes('trung tâm') || nameLower.includes('thành phố'))) {
+      return 'assets/images/anhbenhvien/ytqn.jpg';
+    }
+    if (nameLower.includes('y học cổ truyền')) {
+      return 'assets/images/anhbenhvien/yhoccotruyen.jpg';
+    }
+    if (nameLower.includes('quy hòa') || nameLower.includes('da liễu')) {
+      return 'assets/images/anhbenhvien/bvquyhoa.jpg';
+    }
+    if (nameLower.includes('tuy phước')) {
+      return 'assets/images/anhbenhvien/bvtuyphuoc.jpg';
+    }
+    if (nameLower.includes('quân y 13')) {
+      return 'assets/images/anhbenhvien/quany13.jpg';
+    }
+
+    // Ảnh dự phòng nếu không khớp tên nào ở trên
+    return 'assets/images/logo.jpg'; 
   }
 }
