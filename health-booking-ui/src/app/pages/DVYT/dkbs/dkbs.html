@@ -1,0 +1,95 @@
+<div class="tab-container">
+  <a routerLink="/pages/DVYT/dkcs" routerLinkActive="active" class="tab-item">Đặt khám cơ sở</a>
+  <a routerLink="/pages/DVYT/dkck" routerLinkActive="active" class="tab-item">Đặt khám chuyên khoa</a>
+  <a routerLink="/pages/DVYT/dkbs" routerLinkActive="active" class="tab-item">Đặt khám bác sĩ</a>
+  <a routerLink="/pages/DVYT/dkng" routerLinkActive="active" class="tab-item">Đặt khám ngoài giờ</a>
+  <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active" class="tab-item">Thanh toán viện phí</a>
+</div>
+
+<!-- Bác sĩ được chọn -->
+@if (selectedDoctor) {
+  <div class="selected-doctor-container">
+    <div class="selected-doctor-card">
+      <div class="sd-left">
+        <img [src]="getAvatarPath(selectedDoctor.avatar)" [alt]="selectedDoctor.fullName" (error)="onImgError($event)" />
+      </div>
+      <div class="sd-right">
+        <h2>{{ selectedDoctor.fullName }}</h2>
+        <p><b>Chuyên khoa:</b> {{ selectedDoctor.specialization?.name }}</p>
+        <p><b>Chuyên trị:</b> {{ selectedDoctor.description }}</p>
+        <p><b>Giá khám:</b> <span class="price-tag">230.000đ</span></p>
+        <p><b>Đánh giá:</b> <span class="rating-stars">⭐ 4.9</span> (111 lượt đánh giá)</p>
+        <p><b>Email:</b> {{ selectedDoctor.user?.email || 'nguyenhuudung@healthmeet.com' }}</p>
+        <p><b>Điện thoại:</b> {{ selectedDoctor.phone }}</p>
+        <p><b>Địa chỉ:</b> {{ selectedDoctor.hospital?.address || 'Bình Định' }}</p>
+        
+        <button class="btn-book-large" (click)="openModal(selectedDoctor.doctorId, selectedDoctor.fullName)">
+          Đặt khám với bác sĩ
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Danh sách bác sĩ -->
+<section class="doctor-list">
+  <h3>DANH SÁCH BÁC SĨ</h3>
+  <div class="grid">
+    @for (doctor of paginatedDoctors; track doctor.doctorId) {
+      <div class="doctor-card">
+        <img [src]="getAvatarPath(doctor.avatar)" [alt]="doctor.fullName" (error)="onImgError($event)" />
+        <h4>{{ doctor.fullName }}</h4>
+        <p><b>Chuyên khoa:</b> {{ doctor.specialization?.name }}</p>
+        <p><b>Kinh nghiệm:</b> {{ doctor.experienceYears }} năm</p>
+        <p><b>Chuyên môn:</b> {{ doctor.description }}</p>
+
+        @if (doctor.hospital) {
+          <p><b>Nơi công tác:</b> {{ doctor.hospital.name }}</p>
+        }
+
+        <button class="btn-book" (click)="openModal(doctor.doctorId, doctor.fullName)">
+          Đặt khám với bác sĩ
+        </button>
+      </div>
+    }
+  </div>
+  
+  <!-- Phân trang -->
+  @if (totalPages > 1) {
+    <div class="pagination">
+      @for (page of paginationPages; track page) {
+        <button [class.active]="page === currentPage" (click)="setPage(page)">
+          {{ page }}
+        </button>
+      }
+    </div>
+  }
+</section>
+
+<!-- Modal đặt khám bác sĩ -->
+@if (isModalOpen) {
+  <div id="bookingModal" class="modal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>Đặt lịch khám Bác Sĩ</h2>
+      <form (ngSubmit)="onBookingSubmit()">
+        <div class="form-group mb-2">
+          <label>Bác sĩ đã chọn</label>
+          <input type="text" name="doctorName" readonly [(ngModel)]="bookingData.doctorName" class="form-control" />
+        </div>
+
+        <div class="form-group mb-2">
+          <label for="bookingDate">Ngày khám</label>
+          <input type="date" name="bookingDate" required [(ngModel)]="bookingData.date" class="form-control" />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="bookingTime">Giờ khám</label>
+          <input type="time" name="bookingTime" required [(ngModel)]="bookingData.time" class="form-control" />
+        </div>
+
+        <button type="submit">Xác nhận đặt khám</button>
+      </form>
+    </div>
+  </div>
+}
