@@ -38,25 +38,32 @@
 
     <!-- Partners Section -->
     <section class="partners-section">
-        <h2>Hệ thống Cơ sở Y tế triển khai</h2>
+        <div class="partners-container">
+            <h2>Hệ thống Cơ sở Y tế triển khai</h2>
 
-        <div class="partners-grid">
-            @for (hospital of hospitals; track hospital.name) {
+            <div class="partners-grid">
+            @for (item of promoHospitals; track item.hospitalId) 
+            {
                 <div class="partner-item">
-                    <!-- Binding background-image chuẩn Angular style -->
-                    <div class="partner-img"
-                         [style.backgroundImage]="'url(' + hospital.image + ')'">
+                    <div class="partner-image">
+                        <img [src]="item.image" [alt]="item.name">
+                    </div>
+                    
+                    <div class="hospital-overlay">
+                        <a [href]="item.websiteUrl" target="_blank" class="overlay-btn">Xem Chi Tiết</a>
                     </div>
 
-                    <h3>{{ hospital.name }}</h3>
-                    <p>{{ hospital.address }}</p>
-
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        {{ hospital.rating }}
-                    </div>
+                <div class="hospital-content">
+                        <h3>{{ item.name }}</h3>
+                        
+                        <div class="hospital-address">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ item.address }}</span>
+                        </div>
+                    </div>           
                 </div>
             }
+            </div>
         </div>
     </section>
 </div>

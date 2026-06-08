@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import {Home} from "./home/home";
+import { Home } from "./home/home";
 import { CDUD } from './pages/HD/cdud/cdud';
 import { QTHP } from './pages/HD/qthp/qthp';
 import { CHTG } from './pages/HD/chtg/chtg';
