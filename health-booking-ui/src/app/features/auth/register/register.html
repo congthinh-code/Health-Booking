@@ -1,0 +1,90 @@
+<div class="register-container">
+  <div class="register-box">
+    <h2>Đăng ký tài khoản</h2>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <label>Họ và tên *</label>
+      <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input type="text" formControlName="hoten" placeholder="Nhập họ và tên của bạn">
+      </div>
+
+      <label>Ngày sinh *</label>
+      <div class="input-group">
+        <i class="fa fa-calendar"></i>
+        <input type="text" formControlName="ngaysinh" placeholder="Nhập ngày sinh (DD/MM/YYYY)" (input)="onNgaySinhInput($event)">
+      </div>
+
+      <label>Email *</label>
+      <div class="input-group">
+        <i class="fa fa-envelope"></i>
+        <input type="email" formControlName="email" placeholder="Nhập email của bạn">
+      </div>
+
+      <label>Số điện thoại</label>
+      <div class="input-group">
+        <i class="fa fa-phone"></i>
+        <input type="text" formControlName="sodienthoai" placeholder="Nhập số điện thoại">
+      </div>
+
+      <label>Địa chỉ</label>
+      <div class="input-group">
+        <i class="fa fa-home"></i>
+        <input type="text" formControlName="diachi" placeholder="Nhập địa chỉ">
+      </div>
+
+      <label>Mật khẩu *</label>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="matkhau" placeholder="Nhập mật khẩu">
+        <span class="toggle-password" (click)="togglePassword()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+          <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" style="color: #718096;"></i>
+        </span>
+      </div>
+
+      <label>Vai trò *</label>
+      <div class="input-group">
+        <i class="fa fa-users"></i>
+        <select formControlName="role">
+          <option value="patient">Bệnh nhân</option>
+          <option value="doctor">Bác sĩ</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-submit">Đăng ký</button>
+      
+      <div style="text-align: center; margin-top: 10px;">
+        <a routerLink="/login" style="color: #f08080; text-decoration: none;">Đã có tài khoản? Đăng nhập</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="messageOverlay" *ngIf="showSuccessPopup">
+  <div class="popup-box success-popup">
+    <button class="close-btn" (click)="showSuccessPopup = false">×</button>
+    <h3>✅ Đăng ký thành công</h3>
+    <div class="popup-message">
+      Hệ thống đã tạo mã xác thực tài khoản của bạn.<br>
+      Vui lòng kiểm tra và nhập mã xác thực để kích hoạt tài khoản.
+    </div>
+    <div class="verify-code-box">
+      Mã xác thực của bạn là: <strong>{{ generatedCode }}</strong>
+    </div>
+    <div class="btn-group">
+      <button (click)="goToVerify()" class="btn-action">Xác thực ngay</button>
+      <button (click)="showSuccessPopup = false" class="btn-close">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="errorOverlay" *ngIf="showErrorPopup">
+  <div class="popup-box error-popup">
+    <button class="close-btn" (click)="showErrorPopup = false">×</button>
+    <h3>⚠️ Thông báo</h3>
+    <div class="popup-message">{{ errorMessage }}</div>
+    <div class="btn-group">
+      <button (click)="showErrorPopup = false" class="close-popup-btn">Đóng</button>
+    </div>
+  </div>
+</div>
