@@ -51,15 +51,17 @@
                 <tbody id="jobs-tbody">
                     @for (job of pagedJobs; track job.id) {
                         <tr class="job-row">
-                            <td class="job-title">{{ job.title }}</td>
+                            <td class="job-title">
+                                {{ job.title }}
+                            </td> 
                             <td class="job-type">
-                                <span class="type-badge" [ngClass]="job.type">
-                                    {{ getJobTypeLabel(job.type) }}
+                                <span class="type-badge" 
+                                    [ngClass]="job.type"> 
+                                    {{ getJobTypeLabel(job.type) }} 
                                 </span>
                             </td>
                             <td>
-                                <a [routerLink]="['/pages/LH/job-detail', job.id]" class="btn-detail">
-                                    <i class="fas fa-chevron-right"></i>
+                                <a [routerLink]="['/pages/LH/job-detail', job.id]" class="btn-detail"> <i class="fas fa-chevron-right"></i>
                                 </a>
                             </td>
                         </tr>
