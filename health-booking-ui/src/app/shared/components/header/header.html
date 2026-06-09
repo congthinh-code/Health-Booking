@@ -43,6 +43,37 @@
       </span>
     </div>
 
+    <div class="notification-dropdown" style="position: relative; display: inline-block;">
+    <button id="notification-btn" class="btn-notification" (click)="toggleNotification()">
+        <i class="fa-solid fa-bell"></i>
+        <span id="notification-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+    </button>
+
+    <div id="notification-menu" class="notification-menu" 
+         [style.display]="isNotificationOpen ? 'block' : 'none'"
+         style="position: absolute; right: 0; top: 42px; width: 320px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 99999 !important;">
+        
+        <div class="notification-header" style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">
+            Thông báo mới nhận
+        </div>
+
+        <div id="notification-list" style="max-height: 320px; overflow-y: auto;">
+            @for (noti of notifications; track noti.notifyId) {
+              <div class="notification-item" [style.background-color]="noti.isNew === 1 ? '#fff6f6' : 'transparent'" style="padding: 10px 15px; border-bottom: 1px solid #eee;">
+                  <p [style.font-weight]="noti.isNew === 1 ? '600' : 'normal'" style="margin: 0 0 5px 0; color: #333;">{{ noti.message }}</p>
+                  <small style="color: #999;">{{ noti.createdAt }}</small>
+              </div>
+            }
+
+            @if (notifications.length === 0) {
+                <div style="padding: 25px; text-align: center; color: #bbb; font-size: 13px;">
+                    Không có thông báo nào dành cho bạn.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
     <a *ngIf="userRole === 'admin'" routerLink="/Admin" class="btn-outline" style="color: #e74c3c; font-weight: bold; border-color: #e74c3c; margin-right: 10px;">
       <i class="fas fa-user-shield"></i> Quản lý trang
     </a>
