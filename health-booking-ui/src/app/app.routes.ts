@@ -3,6 +3,7 @@ import { Home } from "./home/home";
 import { Login } from "./features/auth/login/login";
 import { Register } from "./features/auth/register/register";
 import { Verify } from "./features/auth/verify/verify";
+import {Admin} from "./features/admin/admin";
 import { CDUD } from './pages/HD/cdud/cdud';
 import { QTHP } from './pages/HD/qthp/qthp';
 import { CHTG } from './pages/HD/chtg/chtg';
@@ -30,6 +31,9 @@ export const routes: Routes = [
   },
   {
     path: 'verify', component: Verify
+  },
+  {
+    path: 'Admin', component: Admin
   },
   {
     path: 'pages/cdud', component: CDUD

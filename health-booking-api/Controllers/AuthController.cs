@@ -162,9 +162,9 @@ namespace health_booking_api.Controllers
             return Ok(new { success = true, message = "✅ Xác minh tài khoản thành công! Bạn có thể đăng nhập ngay." });
         }
 
-        // 3. GỬI LẠI MÃ XÁC THỰC (Logic Resend từ verify.php)
+        // 3. GỬI LẠI MÃ XÁC THỰC (Đã cấu trúc lại để tránh lỗi xác mấu dữ liệu trống)
         [HttpPost("resend-code")]
-        public async Task<IActionResult> ResendCode([FromBody] VerifyDto dto)
+        public async Task<IActionResult> ResendCode([FromBody] ResendCodeDto dto) // 🔥 Đã đổi từ VerifyDto thành ResendCodeDto
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (user == null)
@@ -189,7 +189,7 @@ namespace health_booking_api.Controllers
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
-            return Ok(new { success = true, message = "✅ Đã tạo mã xác minh mới!", newCode = newCode });
+            return Ok(new { success = true, message = "✅ Đã tạo và gửi lại mã xác minh mới thành công!", newCode = newCode });
         }
 
         // 4. ĐĂNG NHẬP (Chuyển đổi từ login.php)

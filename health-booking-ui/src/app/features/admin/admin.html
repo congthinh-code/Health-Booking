@@ -1,0 +1,178 @@
+<div class="admin-layout">
+    <div class="sidebar">
+        <h2><i class="fas fa-user-shield"></i> HealthBooking Admin</h2>
+        <ul>
+            <li [class.active]="activeTab === 'overview'" (click)="changeTab('overview')">
+                <i class="fas fa-chart-pie"></i> Tổng quan thống kê
+            </li>
+            <li [class.active]="activeTab === 'doctors'" (click)="changeTab('doctors')">
+                <i class="fas fa-user-md"></i> Quản lý bác sĩ
+            </li>
+            <li [class.active]="activeTab === 'patients'" (click)="changeTab('patients')">
+                <i class="fas fa-user-injured"></i> Quản lý bệnh nhân
+            </li>
+            <li [class.active]="activeTab === 'appointments'" (click)="changeTab('appointments')">
+                <i class="fas fa-calendar-alt"></i> Lịch hẹn khám
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+
+        <div [hidden]="activeTab !== 'overview'">
+            <h2>Bảng điều khiển tổng quan</h2>
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <h3>{{ stats.totalAccounts }}</h3>
+                        <p>Tổng tài khoản</p>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <i class="fas fa-user-md"></i>
+                    <div>
+                        <h3>{{ stats.totalDoctors }}</h3>
+                        <p>Bác sĩ hệ thống</p>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <i class="fas fa-user-injured"></i>
+                    <div>
+                        <h3>{{ stats.totalPatients }}</h3>
+                        <p>Bệnh nhân đăng ký</p>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <i class="fas fa-calendar-check"></i>
+                    <div>
+                        <h3>{{ stats.totalAppointments }}</h3>
+                        <p>Lịch hẹn đã đặt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="activeTab === 'doctors'" class="table-card">
+            <h2>Quản lý thông tin Bác sĩ</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Chuyên khoa</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let doc of doctors">
+                        <td>{{ doc.userId }}</td>
+                        <td><input type="text" [(ngModel)]="doc.name" class="table-input"></td>
+                        <td><input type="text" [(ngModel)]="doc.email" class="table-input"></td>
+                        <td><input type="text" [(ngModel)]="doc.phone" class="table-input"></td>
+                        <td><input type="text" [(ngModel)]="doc.specialty" class="table-input"></td>
+                        <td>
+                            <button class="btn-save" (click)="saveDoctor(doc)"><i class="fas fa-save"></i> Lưu</button>
+                            <button class="btn-delete" (click)="deleteUser(doc.userId, 'doctors')"><i
+                                    class="fas fa-trash"></i> Xóa</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="activeTab === 'patients'" class="table-card">
+            <h2>Quản lý thông tin Bệnh nhân</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pat of patients">
+                        <td>{{ pat.userId }}</td>
+                        <td><input type="text" [(ngModel)]="pat.name" class="table-input"></td>
+                        <td><input type="text" [(ngModel)]="pat.email" class="table-input"></td>
+                        <td><input type="text" [(ngModel)]="pat.phone" class="table-input"></td>
+                        <td><input type="text" [(ngModel)]="pat.address" class="table-input"></td>
+                        <td>
+                            <button class="btn-save" (click)="savePatient(pat)"><i class="fas fa-save"></i> Lưu</button>
+                            <button class="btn-delete" (click)="deleteUser(pat.userId, 'patients')"><i
+                                    class="fas fa-trash"></i> Xóa</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="activeTab === 'appointments'" class="tab-content">
+            <h3>Danh Sách Đặt Lịch Khám (Nguồn: Trang chủ)</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Mã lịch</th>
+                        <th>Bệnh nhân</th>
+                        <th>Bệnh viện</th>
+                        <th>Khoa khám</th>
+                        <th>Ngày khám</th>
+                        <th>Giờ khám</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let app of appointments">
+                        <td>#{{ app.appointmentId }}</td>
+
+                        <td>{{ app.patientName }}</td>
+                        <td>{{ app.hospitalName }}</td>
+                        <td>{{ app.specializationName }}</td>
+
+                        <td>{{ app.appointmentDate | date: 'dd/MM/yyyy' }}</td>
+
+                        <td>
+                            <span class="time-badge">
+                                {{ app.appointmentDate | date: 'HH:mm' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="status-badge" [ngClass]="{
+            'status-confirmed': app.status === 1,
+            'status-pending': app.status !== 1
+          }">
+                                {{ app.status === 1 ? 'Đã xác nhận' : 'Chờ duyệt' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+                                <button *ngIf="app.status !== 1" class="btn-confirm"
+                                    (click)="confirmAppointment(app.appointmentId)">
+                                    <i class="fas fa-check-circle"></i> Xác nhận
+                                </button>
+
+                                <button class="btn-delete" (click)="deleteAppointment(app.appointmentId)">
+                                    <i class="fas fa-calendar-times"></i> Hủy lịch
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="appointments.length === 0">
+                        <td colspan="7" style="text-align: center; color: #888; padding: 15px;">Không có lịch hẹn nào
+                            được đặt từ trang chủ.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

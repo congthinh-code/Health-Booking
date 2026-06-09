@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {AuthService} from '../../../core/services/auth-service/auth.service';
+import { AuthService } from '../../../core/services/auth-service/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,7 +16,7 @@ export class Login {
   password = '';
   showPassword = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   togglePassword() {
     this.showPassword = !this.showPassword;
@@ -30,20 +30,23 @@ export class Login {
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
-        if (res.success) {
-          // Lưu Session Storage giả lập tương tự PHP
-          localStorage.setItem('user_id', res.userId.toString());
-          localStorage.setItem('name', res.name);
-          localStorage.setItem('avatar', res.avatar || '');
-          
-          // Ép toàn bộ Role về chữ thường theo đúng cấu trúc vận hành cũ: "admin", "doctor", "patient"
-          const normalizeRole = res.role.toLowerCase();
-          localStorage.setItem('role', normalizeRole);
+        // Thêm log kiểm tra trực tiếp để bạn nhìn thấy hình thù dữ liệu trả về trong F12 Console
+        console.log('Dữ liệu Server trả về khi login:', res);
 
-          // Phát tín hiệu cập nhật Header tức thời
+        // Kiểm tra và lấy chính xác userId (bất kể Server trả về userId hay UserId)
+        const rawUserId = res.userId || res.UserId || res.userid;
+        const rawName = res.name || res.Name;
+        const rawRole = res.role || res.Role;
+        const rawAvatar = res.avatar || res.Avatar;
+
+        if (res.success && rawUserId) {
+          // Hoán đổi localStorage thành sessionStorage
+          sessionStorage.setItem('user_id', rawUserId.toString());
+          sessionStorage.setItem('name', rawName || 'Thành viên');
+          sessionStorage.setItem('avatar', rawAvatar || '');
+          sessionStorage.setItem('role', rawRole ? rawRole.toLowerCase().trim() : 'patient');
+
           this.authService.setLoggedInStatus(true);
-
-          // Điều hướng quay về trang chủ hệ thống công cộng
           this.router.navigate(['/']);
         } else {
           alert(res.message || 'Sai tài khoản hoặc mật khẩu!');
