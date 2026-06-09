@@ -31,6 +31,8 @@ export class Login {
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
         if (res.success) {
+          // Đảm bảo xóa sạch ảnh đại diện của người đăng nhập trước đó
+          localStorage.removeItem('userAvatar');
           // Lưu Session Storage giả lập tương tự PHP
           localStorage.setItem('user_id', res.userId.toString());
           localStorage.setItem('name', res.name);

@@ -34,6 +34,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

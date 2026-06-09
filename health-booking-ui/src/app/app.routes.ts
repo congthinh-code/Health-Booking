@@ -17,6 +17,8 @@ import { Dkbs } from './pages/DVYT/dkbs/dkbs';
 import { Dkng } from './pages/DVYT/dkng/dkng';
 import { Ttvp } from './pages/DVYT/ttvp/ttvp';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
+import { PatientComponent } from './features/patient/patient';
+import { EditProfileComponent} from './features/patient/edit-profile/edit-profile';
 
 export const routes: Routes = [
   {
@@ -58,7 +60,14 @@ export const routes: Routes = [
   {
     path: 'pages/LH/job-detail/:id', component: JobDetail
   },
-  
+  {
+    path: 'patient',
+    children: [
+      { path: '', component: PatientComponent }, // URL: /patient -> vào thẳng trang lịch hẹn
+      { path: 'editprofile', component: EditProfileComponent } // URL: /patient/editprofile -> trang chỉnh sửa
+    ]
+  },
+
   // ================= THÊM 5 ĐƯỜNG DẪN DƯỚI ĐÂY =================
   // {
   //   path: 'pages/DVYT/dkcs', component: Dkcs
