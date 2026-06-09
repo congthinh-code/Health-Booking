@@ -95,8 +95,27 @@ export class Header implements OnInit {
     this.isNotificationOpen = false;
   }
 
-  toggleMenu() { this.isMobileMenuOpen = !this.isMobileMenuOpen; }
-  logout() { this.authService.logout(); this.resetHeader(); }
+  loadHeaderAvatar() {
+    // 1. Lấy ảnh real-time nếu người dùng vừa mới thực hiện đổi avatar ở trang cá nhân
+    let avatarToDisplay = localStorage.getItem('userAvatar') || sessionStorage.getItem('userAvatar');
+
+    // 2. Nếu 'userAvatar' chưa có (lúc mới đăng nhập xong), bốc ngay cái key 'avatar' từ login.ts
+    if (!avatarToDisplay || avatarToDisplay === 'undefined' || avatarToDisplay === 'null' || avatarToDisplay === '') {
+      avatarToDisplay = localStorage.getItem('avatar') || sessionStorage.getItem('avatar');
+    }
+
+    // 3. 🔥 ĐÃ SỬA LOGIC: Kiểm tra chuỗi sạch sẽ, loại bỏ hoàn toàn các trường hợp rỗng/null/undefined dạng chuỗi
+    if (avatarToDisplay && 
+        avatarToDisplay !== 'undefined' && 
+        avatarToDisplay !== 'null' && 
+        avatarToDisplay.trim() !== '') {
+      
+      // Dự phòng kiểm tra nếu C# trả về đường dẫn tương đối dạng '/uploads/...' thì nối domain vào
+      if (avatarToDisplay.startsWith('/uploads')) {
+        this.currentAvatar = `https://localhost:7291${avatarToDisplay}`;
+      } else {
+        this.currentAvatar = avatarToDisplay;
+      }
 
   loadHeaderAvatar() {
     if (!isPlatformBrowser(this.platformId)) return;

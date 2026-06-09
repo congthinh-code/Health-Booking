@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../../core/config/api.config';
+import { FALLBACK_LOGO, specialtyIconPath } from '../../../core/utils/image.util';
 
 export interface Specialization {
   specializationId?: number;
@@ -17,6 +19,7 @@ export interface Specialization {
 })
 export class Dkck implements OnInit {
   specializations: Specialization[] = [];
+  loadError = '';
 
   constructor(private http: HttpClient) {}
 
@@ -25,29 +28,14 @@ export class Dkck implements OnInit {
   }
 
   loadSpecializations(): void {
-    this.http.get<Specialization[]>('http://localhost:5213/api/specializations').subscribe({
+    this.http.get<Specialization[]>(`${API_BASE_URL}/api/specializations`).subscribe({
       next: (data) => {
         this.specializations = data;
+        this.loadError = '';
       },
-      error: (err) => {
-        console.warn('Không kết nối được API. Kích hoạt dữ liệu dự phòng chuyên khoa...', err);
-        this.specializations = [
-          { name: 'Bác sĩ gia đình' },
-          { name: 'Tiêu hoá gan mật' },
-          { name: 'Nội tổng quát' },
-          { name: 'Nội tiết' },
-          { name: 'Da liễu' },
-          { name: 'Nội tim mạch' },
-          { name: 'Nội thần kinh' },
-          { name: 'Nội cơ xương khớp' },
-          { name: 'Tai mũi họng' },
-          { name: 'Mắt' },
-          { name: 'Nội tiêu hoá' },
-          { name: 'Nội hô hấp' },
-          { name: 'Nội tiết niệu' },
-          { name: 'Ngoại cơ xương khớp' },
-          { name: 'Sản - Phụ khoa' }
-        ];
+      error: () => {
+        this.specializations = [];
+        this.loadError = 'Không tải được danh sách chuyên khoa. Vui lòng chạy API backend (port 5213).';
       }
     });
   }
@@ -58,14 +46,10 @@ export class Dkck implements OnInit {
   }
 
   getIconPath(name: string): string {
-    let filename = name.trim();
-    if (filename === 'Sản - Phụ khoa') {
-      filename = 'Sản - phụ khoa';
-    }
-    return `assets/images/iconchuyenkhoa/${filename}.png`;
+    return specialtyIconPath(name);
   }
 
-  onImgError(event: any): void {
-    event.target.src = 'assets/images/logo.png';
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = FALLBACK_LOGO;
   }
 }

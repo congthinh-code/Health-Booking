@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class DoctorService {
-  private baseUrl = 'https://localhost:7xxx/api'; // ← đổi port cho đúng
+  private baseUrl = `${API_BASE_URL}/api`;
 
   constructor(private http: HttpClient) {}
 
-  getDashboard(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/doctor/dashboard`);
+  getDashboard(userId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/doctors/dashboard/${userId}`);
   }
 
   getDoctorById(id: number): Observable<any> {

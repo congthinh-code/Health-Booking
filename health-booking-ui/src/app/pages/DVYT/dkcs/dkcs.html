@@ -1,0 +1,93 @@
+<div class="tab-container">
+  <a routerLink="/pages/DVYT/dkcs" routerLinkActive="active" class="tab-item">Đặt khám cơ sở</a>
+  <a routerLink="/pages/DVYT/dkck" routerLinkActive="active" class="tab-item">Đặt khám chuyên khoa</a>
+  <a routerLink="/pages/DVYT/dkbs" routerLinkActive="active" class="tab-item">Đặt khám bác sĩ</a>
+  <a routerLink="/pages/DVYT/dkng" routerLinkActive="active" class="tab-item">Đặt khám ngoài giờ</a>
+  <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active" class="tab-item">Thanh toán viện phí</a>
+</div>
+
+<h1 class="page-title">Đặt khám tại cơ sở</h1>
+
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
+<div class="search-box">
+  <input type="text" placeholder="Tìm bệnh viện, phòng khám..." [(ngModel)]="searchTerm" (ngModelChange)="filterHospitals()" />
+</div>
+
+<div class="grid">
+  @for (hospital of paginatedHospitals; track hospital.hospitalId) {
+    <div class="card">
+      <div class="card-left">
+        <img [src]="getLogoPath(hospital.image)" [alt]="hospital.name" (error)="onImgError($event)" class="logo" />
+      </div>
+      <div class="card-right">
+        <h3 class="title">
+          {{ hospital.name }}
+          @if (hospital.isVerified) {
+            <span class="verified">✓ Verified</span>
+          }
+        </h3>
+        <p class="address">{{ hospital.address }}</p>
+        <div class="rating">⭐ {{ hospital.rating }} ({{ hospital.reviewCount }})</div>
+        <div class="card-actions">
+          <a [href]="hospital.websiteUrl || '#'" target="_blank" class="btn outline">Xem chi tiết</a>
+          <button class="btn primary" (click)="openBookingModal(hospital.hospitalId, hospital.name)">Đặt khám</button>
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <p class="empty-message">Không tìm thấy cơ sở y tế phù hợp.</p>
+  }
+</div>
+
+@if (totalPages > 1) {
+  <div class="pagination">
+    @for (page of paginationPages; track page) {
+      <button [class.active]="page === currentPage" (click)="setPage(page)">
+        {{ page }}
+      </button>
+    }
+  </div>
+}
+
+@if (isModalOpen) {
+  <div id="bookingModal" class="modal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>Đặt lịch khám tại Cơ sở</h2>
+      <form (ngSubmit)="onBookingSubmit()">
+        <div class="form-group">
+          <label>Cơ sở y tế đã chọn</label>
+          <input type="text" name="hospitalName" readonly [(ngModel)]="bookingData.hospitalName" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bookingDate">Ngày khám</label>
+            <input type="date" name="bookingDate" required [(ngModel)]="bookingData.date" />
+          </div>
+          <div class="form-group">
+            <label for="bookingTime">Giờ khám</label>
+            <input type="time" name="bookingTime" required [(ngModel)]="bookingData.time" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="specialty">Chuyên khoa cần khám</label>
+          <select name="specialty" [(ngModel)]="bookingData.specialty" required>
+            <option value="" disabled>Chọn chuyên khoa</option>
+            <option value="Tim mạch">Tim mạch</option>
+            <option value="Nhi khoa">Nhi khoa</option>
+            <option value="Da liễu">Da liễu</option>
+            <option value="Cơ xương khớp">Cơ xương khớp</option>
+            <option value="Tai mũi họng">Tai mũi họng</option>
+          </select>
+        </div>
+
+        <button type="submit">Xác nhận đặt khám</button>
+      </form>
+    </div>
+  </div>
+}

@@ -56,17 +56,17 @@
     <h2>CHUYÊN KHOA</h2>
     <div class="grid">
         
-        @for (item of specialties; track item.label) {
+        @for (name of specialties; track name) {
             <a class="item" 
-               href="https://medpro.vn/tim-kiem?kw={{ item.label }}&tab=subject&page=1" 
+               href="https://medpro.vn/tim-kiem?kw={{ name }}&tab=subject&page=1" 
                target="_blank" 
                rel="noopener noreferrer">
                
-                <img [src]="'assets/images/iconchuyenkhoa/' + item.fileName + '.png'" 
-                     [alt]="item.label" 
-                     (error)="$any($event.target).src='assets/images/logo.png'">
+                <img [src]="getIconPath(name)" 
+                     [alt]="name" 
+                     (error)="onImgError($event)">
                      
-                <p>{{ item.label }}</p>
+                <p>{{ name }}</p>
             </a>
         }
 

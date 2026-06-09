@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../../core/config/api.config';
+import { FALLBACK_LOGO, hospitalImagePath } from '../../../core/utils/image.util';
 
 export interface Hospital {
   hospitalId: number;
@@ -25,6 +27,7 @@ export class Ttvp implements OnInit {
   hospitals: Hospital[] = [];
   filteredHospitals: Hospital[] = [];
   searchTerm = '';
+  loadError = '';
 
   isLoggedIn = false;
   isModalOpen = false;
@@ -57,46 +60,26 @@ export class Ttvp implements OnInit {
 
   checkLoginStatus(): void {
     if (typeof window !== 'undefined') {
-      const userId = localStorage.getItem('UserId') || sessionStorage.getItem('UserId');
+      const userId = sessionStorage.getItem('user_id') || localStorage.getItem('user_id');
       this.isLoggedIn = !!userId;
     }
   }
 
+  getUserId(): string {
+    return sessionStorage.getItem('user_id') || localStorage.getItem('user_id') || '';
+  }
+
   loadHospitals(): void {
-    this.http.get<Hospital[]>('http://localhost:5213/api/hospitals').subscribe({
+    this.http.get<Hospital[]>(`${API_BASE_URL}/api/hospitals`).subscribe({
       next: (data) => {
         this.hospitals = data;
+        this.loadError = '';
         this.filterHospitals();
       },
-      error: (err) => {
-        console.warn('Không kết nối được API. Kích hoạt dữ liệu dự phòng bệnh viện TTVP...', err);
-        this.hospitals = [
-          {
-            hospitalId: 1,
-            name: 'Bệnh viện đa khoa tỉnh Bình Định',
-            image: 'images/anhbenhvien/bvdk.jpg',
-            address: '106 Nguyễn Huệ, Phường Quy Nhơn, Tỉnh Gia Lai',
-          },
-          {
-            hospitalId: 2,
-            name: 'Bệnh viện Mắt Bình Định',
-            image: 'images/anhbenhvien/bvmat.jpg',
-            address: '78 Trần Hưng Đạo, Quy Nhơn, Gia Lai',
-          },
-          {
-            hospitalId: 3,
-            name: 'Trung tâm Y tế Quy Nhơn',
-            image: 'images/anhbenhvien/bvquynhon.jpg',
-            address: '114 Trần Hưng Đạo, phường Quy Nhơn, tỉnh Gia Lai',
-          },
-          {
-            hospitalId: 4,
-            name: 'Bệnh viện Y học cổ truyền & PHCN Bình Định',
-            image: 'images/anhbenhvien/yhoccotruyen.jpg',
-            address: 'Tổ 05, KV05, Phường Quy Nhơn Bắc, tỉnh Gia Lai',
-          }
-        ];
-        this.filterHospitals();
+      error: () => {
+        this.hospitals = [];
+        this.filteredHospitals = [];
+        this.loadError = 'Không tải được danh sách bệnh viện từ database. Vui lòng chạy API backend.';
       }
     });
   }
@@ -114,18 +97,17 @@ export class Ttvp implements OnInit {
   }
 
   getImgPath(image?: string): string {
-    if (!image) return 'assets/images/logo.png';
-    return image.startsWith('images/') ? `assets/${image}` : `assets/images/anhbenhvien/${image}`;
+    return hospitalImagePath(image);
   }
 
-  onImgError(event: any): void {
-    event.target.src = 'assets/images/logo.png';
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = FALLBACK_LOGO;
   }
 
   openPaymentModal(id: number, name: string): void {
     if (!this.isLoggedIn) {
       if (confirm('Vui lòng đăng nhập để tiến hành thanh toán viện phí trực tuyến!')) {
-        this.router.navigate(['/account/login']);
+        this.router.navigate(['/login']);
       }
       return;
     }
@@ -147,6 +129,7 @@ export class Ttvp implements OnInit {
 
   onPaymentSubmit(): void {
     const body = new URLSearchParams({
+      userId: this.getUserId(),
       hospitalId: this.paymentData.hospitalId.toString(),
       patientName: this.paymentData.patientName,
       patientCode: this.paymentData.patientCode,
@@ -154,7 +137,7 @@ export class Ttvp implements OnInit {
       method: this.paymentData.method
     });
 
-    this.http.post<any>('http://localhost:5213/api/appointments', body.toString(), {
+    this.http.post<any>(`${API_BASE_URL}/api/appointments`, body.toString(), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).subscribe({
       next: (data) => {

@@ -6,6 +6,10 @@
   <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active" class="tab-item">Thanh toán viện phí</a>
 </div>
 
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
 <!-- Bác sĩ được chọn -->
 @if (selectedDoctor) {
   <div class="selected-doctor-container">

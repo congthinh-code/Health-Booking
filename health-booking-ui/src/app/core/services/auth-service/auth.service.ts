@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { API_BASE_URL } from '../../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7291/api/auth'; 
+  private apiUrl = `${API_BASE_URL}/api/auth`; 
   
   // 1. Cứ khởi tạo giá trị mặc định ban đầu là false
   private loggedInSubject = new BehaviorSubject<boolean>(false);

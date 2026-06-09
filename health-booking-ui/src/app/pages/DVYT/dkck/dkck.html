@@ -8,6 +8,10 @@
 
 <h1 class="title">Danh sách chuyên khoa</h1>
 
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
 <div class="department-grid">
   @for (item of specializations; track item.name) {
     <a [href]="getSearchUrl(item.name)" target="_blank" rel="noopener noreferrer" class="department-card">
