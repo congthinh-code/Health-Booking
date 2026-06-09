@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
 import { Home } from "./home/home";
+import { Login } from "./features/auth/login/login";
+import { Register } from "./features/auth/register/register";
+import { Verify } from "./features/auth/verify/verify";
+import {Admin} from "./features/admin/admin";
 import { CDUD } from './pages/HD/cdud/cdud';
 import { QTHP } from './pages/HD/qthp/qthp';
 import { CHTG } from './pages/HD/chtg/chtg';
@@ -8,19 +12,31 @@ import { Linkud } from './pages/HD/linkud/linkud';
 import { CSYT } from './pages/LH/csyt/csyt';
 import { QC } from './pages/LH/qc/qc';
 import { TD } from './pages/LH/td/td';
-import { Dkcs } from './pages/DVYT/dkcs/dkcs';
+// import { Dkcs } from './pages/DVYT/dkcs/dkcs';
 import { Dkck } from './pages/DVYT/dkck/dkck';
 import { Dkbs } from './pages/DVYT/dkbs/dkbs';
 import { Dkng } from './pages/DVYT/dkng/dkng';
 import { Ttvp } from './pages/DVYT/ttvp/ttvp';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
 import { DoctorDashboard } from './pages/doctor/dashboard/dashboard';
-import { DoctorEdit }      from './pages/doctor/edit/edit';
+import { Edit }      from './pages/doctor/edit/edit';
 
 
 export const routes: Routes = [
   {
     path: '', component: Home
+  },
+  {
+    path: 'login', component: Login
+  },
+  {
+    path: 'register', component: Register
+  },
+  {
+    path: 'verify', component: Verify
+  },
+  {
+    path: 'Admin', component: Admin
   },
   {
     path: 'pages/cdud', component: CDUD
@@ -49,11 +65,18 @@ export const routes: Routes = [
   {
     path: 'pages/LH/job-detail/:id', component: JobDetail
   },
-  
-  // ================= THÊM 5 ĐƯỜNG DẪN DƯỚI ĐÂY =================
   {
-    path: 'pages/DVYT/dkcs', component: Dkcs
+    path: 'patient',
+    children: [
+      { path: '', component: PatientComponent }, // URL: /patient -> vào thẳng trang lịch hẹn
+      { path: 'editprofile', component: EditProfileComponent } // URL: /patient/editprofile -> trang chỉnh sửa
+    ]
   },
+
+  // ================= THÊM 5 ĐƯỜNG DẪN DƯỚI ĐÂY =================
+  // {
+  //   path: 'pages/DVYT/dkcs', component: Dkcs
+  // },
   {
     path: 'pages/DVYT/dkck', component: Dkck
   },

@@ -120,6 +120,14 @@ a:focus {
     color: #d93ba2
 }
 
+.intro-content p {
+    font-size: 16px;
+    opacity: 0.95;
+    margin: 0;
+    padding: 0;
+    color: #000
+}
+
 /* ===============================================
    PARTNERS SECTION
    =============================================== */
@@ -130,14 +138,14 @@ a:focus {
     padding: 0 20px;
 }
 
-    .partners-section h2 {
-        font-size: 34px;
-        font-weight: bold;
-        margin: 0 0 8px 0;
-        padding: 0;
-        color: #d93ba2;
-        text-align: center;
-    }
+.partners-section h2 {
+    font-size: 34px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    padding: 0;
+    color: #d93ba2;
+    text-align: center;
+}
 
 .partners-grid {
     display: grid;
@@ -151,19 +159,33 @@ a:focus {
     border: 1px solid #eee;
     border-radius: 6px;
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-    .partner-item:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+.partner-item:hover {
+    box-shadow: 0 8px 24px rgba(217, 59, 162, 0.15);
+    transform: translateY(-4px);
+}
 
-.partner-img {
+.partner-image {
     width: 100%;
     height: 160px;
     background-size: cover;
     background-position: center;
     background-color: #f0f0f0;
+    position: relative; 
+    overflow: hidden;
+}
+
+.partner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .partner-item h3 {
@@ -181,16 +203,72 @@ a:focus {
     line-height: 1.4;
 }
 
-.rating {
-    font-size: 12px;
-    color: #ff9800;
-    padding: 0 12px 12px 12px;
-    margin: 0;
+.hospital-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none;
 }
 
-    .rating i {
-        margin-right: 4px;
-    }
+.partner-item:hover .hospital-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto !important;
+}
+
+.overlay-btn {
+    background: white;
+    color: #667eea;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.partner-item:hover .overlay-btn {
+    transform: scale(1);
+}
+
+.overlay-btn:hover {
+    background: #fff;
+    color: #4c24a8 !important;
+}
+
+.hospital-content {
+    padding: 20px;
+}
+
+.hospital-content h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+    line-height: 1.4;
+}
+
+
+.hospital-address {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+}
+
+.hospital-address i {
+    color: #667eea;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
 
 /* ===============================================
    CONTACT SECTION

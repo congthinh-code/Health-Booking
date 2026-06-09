@@ -17,12 +17,48 @@
         </div>
 
         <div class="actions">
-          <a href="#" class="btn-outline">
-            <i class="fas fa-user"></i> Đăng ký
-          </a>
-          <a href="#" class="btn-outline">
-            <i class="fas fa-right-from-bracket"></i> Đăng nhập
-          </a>
+          <ng-container *ngIf="!isLoggedIn">
+    <a routerLink="/register" class="btn-outline">
+      <i class="fas fa-user"></i> Đăng ký
+    </a>
+    <a routerLink="/login" class="btn-outline">
+      <i class="fas fa-right-from-bracket"></i> Đăng nhập
+    </a>
+  </ng-container>
+
+  <ng-container *ngIf="isLoggedIn">
+    
+    <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 10px; margin-right: 15px;">
+      <img *ngIf="currentAvatar && currentAvatar !== 'assets/images/default-avatar.png'" 
+      [src]="currentAvatar" 
+      alt="Avatar" 
+      style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+      
+      <i *ngIf="!currentAvatar || currentAvatar === 'assets/images/default-avatar.png'"
+      class="fas fa-user-circle" 
+      style="font-size: 24px; color: #f4978e;"></i>
+      
+      <span class="user-name" style="font-weight: 500; color: #333;">
+        Xin chào, <b style="color: #f08080;">{{ userName }}</b>
+      </span>
+    </div>
+
+    <a *ngIf="userRole === 'admin'" routerLink="/Admin" class="btn-outline" style="color: #e74c3c; font-weight: bold; border-color: #e74c3c; margin-right: 10px;">
+      <i class="fas fa-user-shield"></i> Quản lý trang
+    </a>
+    
+    <a *ngIf="userRole === 'doctor'" routerLink="/doctor" class="btn-outline" style="color: #27ae60; font-weight: bold; border-color: #27ae60; margin-right: 10px;">
+      <i class="fas fa-user-md"></i> Trang bác sĩ
+    </a>
+
+    <a *ngIf="userRole === 'patient'" routerLink="/patient" class="btn-outline" style="color: #3498db; font-weight: bold; border-color: #3498db; margin-right: 10px;">
+      <i class="fas fa-user-injured"></i> Trang bệnh nhân
+    </a>
+
+    <a (click)="logout()" class="btn-outline" style="cursor: pointer;">
+      <i class="fas fa-sign-out-alt"></i> Đăng xuất
+    </a>
+  </ng-container>
 
           <div class="lang">
             <div class="lang-selected">

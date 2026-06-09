@@ -1,54 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-interface Hospital {
-  name: string;
-  image: string;
-  address: string;
-  rating: number;
-}
+import {LhService} from '../../../core/services/lh-service/lh-service';
 
 @Component({
   selector: 'app-csyt',
   standalone: true,
-  imports: [RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './csyt.html',
   styleUrl: './csyt.css',
 })
 export class CSYT implements OnInit {
-  title = 'HealthBooking Partner+ Cùng HealthBooking Nâng Tầm Cơ Sở Y Tế Của Bạn';
-  currentPage = 1;
+  hospitals: any[] = [];         // Lưu toàn bộ danh sách bốc từ DB về
 
-  // Dữ liệu Mock tạm thời hiển thị lên danh sách giống model MVC cũ
-  hospitals: Hospital[] = [
-    {
-      name: 'Bệnh viện Đa khoa Tỉnh Bình Định',
-      image: 'assets/images/hospital1.jpg',
-      address: 'Nguyễn Huệ, Trần Phú, Quy Nhơn, Bình Định',
-      rating: 4.8
-    },
-    {
-      name: 'Phòng khám Đa khoa Quốc tế',
-      image: 'assets/images/hospital2.jpg',
-      address: 'Thành phố Quy Nhơn, Bình Định',
-      rating: 4.7
-    }
-  ];
+  // Cấu hình phân trang chuẩn chỉnh
+  currentPage: number = 1;
+  pageSize: number = 4;             // Đang hiện 4 card trên 1 hàng giống như ảnh image_11d44d.jpg của bạn
+  totalPages: number = 1;
+  pages: number[] = [];            // Mảng số trang để hiển thị nút chuyển trang
 
-  constructor() { }
+  constructor(private lhService: LhService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    // Logic gọi API lấy danh sách thật nếu cần sẽ cấu hình ở đây sau
+    this.loadHospitals(this.currentPage);
   }
 
-  // Các hàm điều hướng phân trang giả lập
-  goToPage(page: number) {
-    this.currentPage = page;
+  loadHospitals(page: number): void {
+    this.lhService.getCSYT(page, this.pageSize).subscribe({
+      next: (res) => {
+        this.hospitals = res.data || res.data;
+        this.currentPage = res.currentPage;
+        this.totalPages = res.totalPages || res.totalPages;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Lỗi lấy data bệnh viện:', err)
+    });
   }
-  prevPage() {
-    if (this.currentPage > 1) this.currentPage--;
-  }
-  nextPage() {
-    if (this.currentPage < 3) this.currentPage++;
+
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.loadHospitals(page);
+    }
   }
 }

@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="left-panel">
+    <img src="assets/images/anhnen.jpg" alt="Online illustration">
+  </div>
+
+  <div class="right-panel">
+    <div class="logo" style="font-size:3rem; text-align:center; margin-bottom:20px;">
+      <i class="fa-solid fa-hand-holding-medical" style="color:#f4978e;"></i>
+      <span style="font-weight:bold; margin-left:8px;">HealthBooking</span>
+    </div>
+
+    <form class="login-form" (ngSubmit)="onLogin()">
+      <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input type="email" [(ngModel)]="email" name="email" placeholder="Nhập tài khoản của bạn" required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" id="password" placeholder="Nhập mật khẩu" required>
+        <span class="toggle-password" id="togglePassword" (click)="togglePassword()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+          <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" style="color: #718096;"></i>
+        </span>
+      </div>
+
+      <button type="submit" class="login-submit-btn">Đăng nhập</button>
+
+      <div class="footer-links" style="text-align: center; margin-top: 15px;">
+        <a routerLink="/register" style="color: #f08080; text-decoration: none; font-weight: 500;">Đăng ký ngay</a>
+      </div>
+    </form>
+  </div>
+</div>
