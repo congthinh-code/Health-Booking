@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <div class="card p-4 profile-edit-form">
+    <h2 class="text-pink">Chỉnh sửa hồ sơ</h2>
+
+    <form (ngSubmit)="onUpdateProfile()">
+      <div class="mb-3">
+        <label class="form-label">Họ tên</label>
+        <input type="text" [(ngModel)]="profileData.fullName" name="fullName" class="form-control" required />
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" [(ngModel)]="profileData.email" name="email" class="form-control" required />
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Số điện thoại</label>
+        <input type="text" [(ngModel)]="profileData.phone" name="phone" class="form-control" />
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Địa chỉ</label>
+        <input type="text" [(ngModel)]="profileData.address" name="address" class="form-control" />
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Ngày sinh</label>
+        <input type="date" [(ngModel)]="profileData.dateOfBirth" name="dateOfBirth" class="form-control" />
+      </div>
+
+      <hr />
+      <h4 class="text-pink">Đổi mật khẩu</h4>
+      
+      <div class="mb-3">
+        <label class="form-label">Mật khẩu hiện tại</label>
+        <input type="password" 
+        [(ngModel)]="profileData.currentPassword" 
+        name="currentPassword" class="form-control" />
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Mật khẩu mới</label>
+        <input type="password" 
+        [(ngModel)]="profileData.newPassword" 
+        name="newPassword" class="form-control" />
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Xác nhận mật khẩu mới</label>
+        <input type="password" 
+        [(ngModel)]="profileData.confirmPassword" 
+        name="confirmPassword" class="form-control" />
+      </div>
+
+      <div class="mt-4">
+        <button type="submit" class="btn btn-success me-2">Lưu thay đổi</button>
+        <a routerLink="/patient" class="btn btn-secondary">Quay lại</a>
+      </div>
+    </form>
+  </div>
+</div>

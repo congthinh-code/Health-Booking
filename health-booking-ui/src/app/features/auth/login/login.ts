@@ -38,6 +38,20 @@ export class Login {
         const rawName = res.name || res.Name;
         const rawRole = res.role || res.Role;
         const rawAvatar = res.avatar || res.Avatar;
+        if (res.success) {
+          // Đảm bảo xóa sạch ảnh đại diện của người đăng nhập trước đó
+          localStorage.removeItem('userAvatar');
+          // Lưu Session Storage giả lập tương tự PHP
+          localStorage.setItem('user_id', res.userId.toString());
+          localStorage.setItem('name', res.name);
+          localStorage.setItem('avatar', res.avatar || '');
+          
+          // Ép toàn bộ Role về chữ thường theo đúng cấu trúc vận hành cũ: "admin", "doctor", "patient"
+          const normalizeRole = res.role.toLowerCase();
+          localStorage.setItem('role', normalizeRole);
+
+          // Phát tín hiệu cập nhật Header tức thời
+          this.authService.setLoggedInStatus(true);
 
         if (res.success && rawUserId) {
           // Hoán đổi localStorage thành sessionStorage

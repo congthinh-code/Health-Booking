@@ -29,8 +29,14 @@
   <ng-container *ngIf="isLoggedIn">
     
     <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 10px; margin-right: 15px;">
-      <img *ngIf="userAvatar" [src]="userAvatar" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-      <i *ngIf="!userAvatar" class="fas fa-user-circle" style="font-size: 24px; color: #f4978e;"></i>
+      <img *ngIf="currentAvatar && currentAvatar !== 'assets/images/default-avatar.png'" 
+      [src]="currentAvatar" 
+      alt="Avatar" 
+      style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+      
+      <i *ngIf="!currentAvatar || currentAvatar === 'assets/images/default-avatar.png'"
+      class="fas fa-user-circle" 
+      style="font-size: 24px; color: #f4978e;"></i>
       
       <span class="user-name" style="font-weight: 500; color: #333;">
         Xin chào, <b style="color: #f08080;">{{ userName }}</b>
