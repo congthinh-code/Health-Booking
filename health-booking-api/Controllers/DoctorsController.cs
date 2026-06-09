@@ -16,8 +16,20 @@ namespace health_booking_api.Controllers
             _context = context;
         }
 
+        // GET: api/Doctors
+        [HttpGet]
+        public async Task<IActionResult> GetDoctors()
+        {
+            var doctors = await _context.Doctors
+                .Include(d => d.Specialization)
+                .Include(d => d.Hospital)
+                .Include(d => d.User)
+                .ToListAsync();
+            return Ok(doctors);
+        }
+
         // GET: api/Doctors/5
-[HttpGet("{id}")]
+        [HttpGet("{id}")]
 public async Task<IActionResult> GetDoctorById(int id)
 {
     var doctor = await _context.Doctors
