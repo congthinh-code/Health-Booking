@@ -14,6 +14,9 @@ import { Dkbs } from './pages/DVYT/dkbs/dkbs';
 import { Dkng } from './pages/DVYT/dkng/dkng';
 import { Ttvp } from './pages/DVYT/ttvp/ttvp';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
+import { DoctorDashboard } from './pages/doctor/dashboard/dashboard';
+import { DoctorEdit }      from './pages/doctor/edit/edit';
+
 
 export const routes: Routes = [
   {
@@ -62,5 +65,7 @@ export const routes: Routes = [
   },
   {
     path: 'pages/DVYT/ttvp', component: Ttvp
-  }
+  },
+  { path: 'doctor/dashboard', component: DoctorDashboard },
+{ path: 'doctor/edit/:id',  component: DoctorEdit },
 ];

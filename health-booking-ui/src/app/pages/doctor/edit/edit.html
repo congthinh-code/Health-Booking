@@ -1,0 +1,54 @@
+<div class="container-box">
+  <h2>✏️ Sửa thông tin bác sĩ</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div class="text-center mb-3">
+      <img [src]="avatarPreviewUrl" class="avatar" id="avatarPreview" />
+    </div>
+
+    <div class="mb-3">
+      <input type="file" class="form-control" accept="image/*" (change)="previewAvatar($event)" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Họ tên</label>
+      <input formControlName="fullName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Số điện thoại</label>
+      <input formControlName="phone" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Bệnh viện / Cơ sở y tế</label>
+      <select formControlName="hospitalId" class="form-select">
+        <option *ngFor="let h of hospitals" [value]="h.hospitalId">{{ h.name }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Chuyên khoa</label>
+      <select formControlName="specializationId" class="form-select">
+        <option *ngFor="let s of specializations" [value]="s.specializationId">{{ s.name }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Kinh nghiệm (năm)</label>
+      <input formControlName="experienceYears" type="number" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Mô tả chuyên môn</label>
+      <textarea formControlName="description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-save">Cập nhật</button>
+      <a routerLink="/doctor/dashboard" class="btn btn-secondary">Quay lại</a>
+    </div>
+
+  </form>
+</div>
