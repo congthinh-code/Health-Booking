@@ -30,36 +30,27 @@ export class Login {
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
-        // Thêm log kiểm tra trực tiếp để bạn nhìn thấy hình thù dữ liệu trả về trong F12 Console
         console.log('Dữ liệu Server trả về khi login:', res);
 
-        // Kiểm tra và lấy chính xác userId (bất kể Server trả về userId hay UserId)
-        const rawUserId = res.userId || res.UserId || res.userid;
-        const rawName = res.name || res.Name;
-        const rawRole = res.role || res.Role;
-        const rawAvatar = res.avatar || res.Avatar;
-        if (res.success) {
-          // Đảm bảo xóa sạch ảnh đại diện của người đăng nhập trước đó
-          localStorage.removeItem('userAvatar');
-          // Lưu Session Storage giả lập tương tự PHP
-          localStorage.setItem('user_id', res.userId.toString());
-          localStorage.setItem('name', res.name);
-          localStorage.setItem('avatar', res.avatar || '');
+        // 1. Kiểm tra success từ server
+        if (res && res.success) {
+          // 2. Lấy dữ liệu an toàn (xử lý case-insensitive)
+          const userId = res.userId || res.UserId || res.userid;
+          const name = res.name || res.Name || 'Thành viên';
+          const avatar = res.avatar || res.Avatar || '';
+          const role = (res.role || res.Role || 'patient').toLowerCase().trim();
+
+          // 3. Xử lý lưu trữ (Chọn 1 trong 2: localStorage hoặc sessionStorage)
+          // Khuyên dùng: Dùng sessionStorage nếu muốn bảo mật hơn (tự xóa khi đóng tab)
+          // Khuyên dùng: Dùng localStorage nếu muốn duy trì đăng nhập sau khi tắt trình duyệt
+          const storage = sessionStorage; // Hoặc localStorage tùy nhu cầu
           
-          // Ép toàn bộ Role về chữ thường theo đúng cấu trúc vận hành cũ: "admin", "doctor", "patient"
-          const normalizeRole = res.role.toLowerCase();
-          localStorage.setItem('role', normalizeRole);
+          storage.setItem('user_id', userId.toString());
+          storage.setItem('name', name);
+          storage.setItem('avatar', avatar);
+          storage.setItem('role', role);
 
-          // Phát tín hiệu cập nhật Header tức thời
-          this.authService.setLoggedInStatus(true);
-
-        if (res.success && rawUserId) {
-          // Hoán đổi localStorage thành sessionStorage
-          sessionStorage.setItem('user_id', rawUserId.toString());
-          sessionStorage.setItem('name', rawName || 'Thành viên');
-          sessionStorage.setItem('avatar', rawAvatar || '');
-          sessionStorage.setItem('role', rawRole ? rawRole.toLowerCase().trim() : 'patient');
-
+          // 4. Cập nhật trạng thái và điều hướng
           this.authService.setLoggedInStatus(true);
           this.router.navigate(['/']);
         } else {
@@ -67,8 +58,7 @@ export class Login {
         }
       },
       error: (err) => {
-        if (err.error && err.error.isNotVerified) {
-          // Nếu tài khoản chưa kích hoạt, điều hướng tự động sang trang nhập OTP
+        if (err.error?.isNotVerified) {
           this.router.navigate(['/verify'], { queryParams: { email: this.email } });
         } else {
           alert(err.error?.message || 'Không thể kết nối server!');
