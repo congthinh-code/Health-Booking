@@ -43,7 +43,7 @@ export class Login {
           // 3. Xử lý lưu trữ (Chọn 1 trong 2: localStorage hoặc sessionStorage)
           // Khuyên dùng: Dùng sessionStorage nếu muốn bảo mật hơn (tự xóa khi đóng tab)
           // Khuyên dùng: Dùng localStorage nếu muốn duy trì đăng nhập sau khi tắt trình duyệt
-          const storage = sessionStorage; // Hoặc localStorage tùy nhu cầu
+          const storage = localStorage; // Hoặc localStorage tùy nhu cầu
           
           storage.setItem('user_id', userId.toString());
           storage.setItem('name', name);

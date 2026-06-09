@@ -96,10 +96,19 @@ export class TD implements OnInit {
 
   // Hàm hiển thị nhãn đẹp mắt cho Job Type
   getJobTypeLabel(type: string): string {
-    if (type.toLowerCase() === 'full time') return 'Full Time';
-    if (type.toLowerCase() === 'part time') return 'Part Time';
-    return 'Internship';
+  // 🔥 ĐƯA LÊN ĐẦU: Nếu type bị null, undefined hoặc chuỗi rỗng, chặn lại và trả về chữ ngay lập tức
+  if (!type || type === 'undefined' || type === 'null' || type.trim() === '') {
+    return 'Chưa xác định';
   }
+
+  // Bây giờ đã an toàn 100%, tha hồ gọi toLowerCase() không sợ bị sập trang nữa
+  const normalizeType = type.toLowerCase().trim();
+
+  if (normalizeType === 'full time') return 'Full Time';
+  if (normalizeType === 'part time') return 'Part Time';
+  
+  return 'Internship';
+}
 
   viewDetail(jobId: number) {
     this.router.navigate(['/job-detail', jobId]);
