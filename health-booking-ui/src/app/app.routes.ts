@@ -4,6 +4,8 @@ import { Login } from "./features/auth/login/login";
 import { Register } from "./features/auth/register/register";
 import { Verify } from "./features/auth/verify/verify";
 import {Admin} from "./features/admin/admin";
+import { PatientComponent } from './features/patient/patient';
+import { EditProfileComponent } from './features/patient/edit-profile/edit-profile';
 import { CDUD } from './pages/HD/cdud/cdud';
 import { QTHP } from './pages/HD/qthp/qthp';
 import { CHTG } from './pages/HD/chtg/chtg';
@@ -18,7 +20,7 @@ import { Dkbs } from './pages/DVYT/dkbs/dkbs';
 import { Dkng } from './pages/DVYT/dkng/dkng';
 import { Ttvp } from './pages/DVYT/ttvp/ttvp';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
-import { DoctorDashboard } from './pages/doctor/dashboard/dashboard';
+import {Dashboard} from "./pages/doctor/dashboard/dashboard";
 import { Edit }      from './pages/doctor/edit/edit';
 
 
@@ -89,6 +91,6 @@ export const routes: Routes = [
   {
     path: 'pages/DVYT/ttvp', component: Ttvp
   },
-  { path: 'doctor/dashboard', component: DoctorDashboard },
-{ path: 'doctor/edit/:id',  component: DoctorEdit },
+  { path: 'doctor/dashboard', component: Dashboard },
+{ path: 'doctor/edit/:id',  component: Edit },
 ];
