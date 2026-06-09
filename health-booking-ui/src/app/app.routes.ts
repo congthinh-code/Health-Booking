@@ -18,8 +18,10 @@ import { Dkbs } from './pages/DVYT/dkbs/dkbs';
 import { Dkng } from './pages/DVYT/dkng/dkng';
 import { Ttvp } from './pages/DVYT/ttvp/ttvp';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
-import { DoctorDashboard } from './pages/doctor/dashboard/dashboard';
-import { Edit }      from './pages/doctor/edit/edit';
+import { Dashboard } from './features/doctor/dashboard/dashboard';
+import { Edit }      from './features/doctor/edit/edit';
+import { PatientComponent } from './features/patient/patient';
+import { EditProfileComponent } from './features/patient/edit-profile/edit-profile';
 
 
 export const routes: Routes = [
@@ -89,6 +91,6 @@ export const routes: Routes = [
   {
     path: 'pages/DVYT/ttvp', component: Ttvp
   },
-  { path: 'doctor/dashboard', component: DoctorDashboard },
-{ path: 'doctor/edit/:id',  component: DoctorEdit },
+  { path: 'doctor/dashboard', component: Dashboard },
+{ path: 'doctor/edit/:id',  component: Edit },
 ];
