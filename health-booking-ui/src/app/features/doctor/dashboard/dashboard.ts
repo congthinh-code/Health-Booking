@@ -21,7 +21,8 @@ export class Dashboard implements OnInit {
   constructor(private doctorService: DoctorService) {}
 
   ngOnInit() {
-    this.doctorService.getDashboard().subscribe({
+    const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
+    this.doctorService.getDashboard(userId).subscribe({
       next: (data) => {
         this.doctor = data.doctor;
         this.appointments = data.appointments;
@@ -36,6 +37,7 @@ export class Dashboard implements OnInit {
 
   getAvatarUrl(avatar: string): string {
     if (!avatar) return '/images/doctor.png';
+    if (avatar.startsWith('/uploads/avatars')) return `http://localhost:5213${avatar}`;
     if (avatar.includes('anhbs')) return `/images/anhbacsi/${avatar}`;
     return `/images/userAvatar/${avatar}`;
   }
@@ -74,7 +76,14 @@ export class Dashboard implements OnInit {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
     this.doctorService.uploadAvatar(this.doctor.doctorId, file).subscribe({
-      next: () => this.ngOnInit(),
+      next: (res) => {
+        if (res && res.avatarUrl) {
+          sessionStorage.setItem('avatar', res.avatarUrl);
+          localStorage.setItem('userAvatar', res.avatarUrl);
+          window.dispatchEvent(new Event('avatarUpdated'));
+        }
+        this.ngOnInit();
+      },
       error: () => alert('Upload avatar thất bại!')
     });
   }

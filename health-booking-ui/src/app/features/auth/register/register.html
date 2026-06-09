@@ -36,7 +36,7 @@
       <label>Mật khẩu *</label>
       <div class="input-group">
         <i class="fa fa-lock"></i>
-        <input [type]="showPassword ? 'text' : 'password'" formControlName="matkhau" placeholder="Nhập mật khẩu">
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="matkhau" placeholder="Ví dụ: Abc123! (chữ hoa đầu, ký tự đặc biệt cuối)">
         <span class="toggle-password" (click)="togglePassword()" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;">
           <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" style="color: #718096;"></i>
         </span>

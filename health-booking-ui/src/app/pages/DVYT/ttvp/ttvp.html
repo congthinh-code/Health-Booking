@@ -10,6 +10,10 @@
   <h1>THANH TOÁN VIỆN PHÍ</h1>
 </div>
 
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
 <!-- Thanh tìm kiếm bệnh viện -->
 <div class="search-box">
   <input type="text" placeholder="Tìm bệnh viện..." [(ngModel)]="searchTerm" (ngModelChange)="filterHospitals()" />
@@ -27,7 +31,7 @@
           ⭐ 0 / 5
         </div>
         <div class="benhvien-btns">
-          <a [routerLink]="['/pages/hospital', bv.hospitalId]" class="xem">
+          <a [href]="bv.websiteUrl || '#'" target="_blank" class="xem">
             <i class="fa-solid fa-clock-rotate-left"></i> Xem chi tiết
           </a>
           <button class="dat" (click)="openPaymentModal(bv.hospitalId, bv.name)">
@@ -52,7 +56,7 @@
       <form (ngSubmit)="onPaymentSubmit()">
         <div class="form-group">
           <label>Bệnh viện thanh toán</label>
-          <input type="text" name="hospitalName" readonly [value]="paymentData.hospitalName" />
+          <input type="text" name="hospitalName" readonly [(ngModel)]="paymentData.hospitalName" />
         </div>
 
         <div class="form-group">

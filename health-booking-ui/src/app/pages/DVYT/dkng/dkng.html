@@ -8,6 +8,10 @@
 
 <h1 class="page-title">Đặt khám ngoài giờ</h1>
 
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
 <!-- Khung lưới hiển thị danh sách phòng khám/bệnh viện ngoài giờ -->
 @if (displayMode === 'hospital') {
   <div class="grid">
@@ -28,7 +32,7 @@
             ⭐ 0 (0)
           </div>
           <div class="card-actions">
-            <a [routerLink]="['/pages/hospital', hospital.hospitalId]" class="btn outline">Xem chi tiết</a>
+            <a [href]="hospital.websiteUrl || '#'" target="_blank" class="btn outline">Xem chi tiết</a>
             <button class="btn primary" (click)="openBookingModal(hospital.hospitalId, hospital.name)">Đặt khám</button>
           </div>
         </div>

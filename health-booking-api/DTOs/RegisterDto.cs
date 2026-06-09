@@ -11,8 +11,8 @@ namespace health_booking_api.DTOs
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        public string SoDienThoai { get; set; }
-        public string DiaChi { get; set; }
+        public string? SoDienThoai { get; set; }
+        public string? DiaChi { get; set; }
         [Required]
         public string MatKhau { get; set; }
         [Required]

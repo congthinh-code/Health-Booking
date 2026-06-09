@@ -60,8 +60,26 @@ export class Register {
       return;
     }
 
-    const registerData = this.registerForm.value;
-    this.registeredEmail = registerData.email;
+    const form = this.registerForm.value;
+    this.registeredEmail = form.email;
+
+    const password: string = form.matkhau || '';
+    const passwordPattern = /^[A-Z].*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]$/;
+    if (!passwordPattern.test(password)) {
+      this.errorMessage = 'Mật khẩu phải bắt đầu bằng chữ in hoa và kết thúc bằng ký tự đặc biệt (ví dụ: Abc123!).';
+      this.showErrorPopup = true;
+      return;
+    }
+
+    const registerData = {
+      hoTen: form.hoten,
+      ngaySinh: form.ngaysinh,
+      email: form.email,
+      soDienThoai: form.sodienthoai || '',
+      diaChi: form.diachi || '',
+      matKhau: form.matkhau,
+      role: form.role
+    };
 
     this.authService.register(registerData).subscribe({
       next: (res) => {

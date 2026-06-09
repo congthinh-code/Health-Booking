@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../../core/config/api.config';
+import { doctorAvatarPath, FALLBACK_DOCTOR, FALLBACK_LOGO, hospitalImagePath } from '../../../core/utils/image.util';
 
 export interface Specialization {
   name: string;
@@ -52,6 +54,7 @@ export class Dkng implements OnInit {
 
   currentPage = 1;
   itemsPerPage = 4;
+  loadError = '';
 
   constructor(
     private router: Router,
@@ -65,96 +68,54 @@ export class Dkng implements OnInit {
 
   checkLoginStatus(): void {
     if (typeof window !== 'undefined') {
-      const userId = localStorage.getItem('UserId') || sessionStorage.getItem('UserId');
-      const role = localStorage.getItem('Role') || sessionStorage.getItem('Role');
+      const userId = sessionStorage.getItem('user_id') || localStorage.getItem('user_id');
+      const role = (sessionStorage.getItem('role') || localStorage.getItem('role') || '').toLowerCase();
       this.isLoggedIn = !!userId;
-      this.userRole = role || '';
+      this.userRole = role;
     }
   }
 
+  getUserId(): string {
+    return sessionStorage.getItem('user_id') || localStorage.getItem('user_id') || '';
+  }
+
   loadData(): void {
-    this.http.get<Hospital[]>('http://localhost:5213/api/hospitals').subscribe({
+    this.http.get<Hospital[]>(`${API_BASE_URL}/api/hospitals`).subscribe({
       next: (data) => {
-        // Ánh xạ thêm các trường giao diện nếu API chưa cung cấp
         this.hospitals = data.map(h => ({
           ...h,
-          rating: 0,
+          rating: h.rating ?? 0,
           reviewCount: 0,
           isVerified: h.hospitalId <= 3
         }));
+        this.loadError = '';
       },
-      error: (err) => {
-        console.warn('Không kết nối được API. Kích hoạt dữ liệu dự phòng bệnh viện ĐKNG...', err);
-        this.hospitals = [
-          {
-            hospitalId: 1,
-            name: 'Bệnh viện đa khoa tỉnh Bình Định',
-            image: 'images/anhbenhvien/bvdk.jpg',
-            address: '106 Nguyễn Huệ, Phường Quy Nhơn, Tỉnh Gia Lai',
-            rating: 0,
-            reviewCount: 0,
-            isVerified: true
-          },
-          {
-            hospitalId: 2,
-            name: 'Bệnh viện Mắt Bình Định',
-            image: 'images/anhbenhvien/bvmat.jpg',
-            address: '78 Trần Hưng Đạo, Quy Nhơn, Gia Lai',
-            rating: 0,
-            reviewCount: 0,
-            isVerified: true
-          },
-          {
-            hospitalId: 3,
-            name: 'Trung tâm Y tế Quy Nhơn',
-            image: 'images/anhbenhvien/bvquynhon.jpg',
-            address: '114 Trần Hưng Đạo, phường Quy Nhơn, tỉnh Gia Lai',
-            rating: 0,
-            reviewCount: 0,
-            isVerified: true
-          }
-        ];
+      error: () => {
+        this.hospitals = [];
+        this.loadError = 'Không tải được dữ liệu từ database. Vui lòng chạy API backend.';
       }
     });
 
-    this.http.get<Doctor[]>('http://localhost:5213/api/doctors').subscribe({
+    this.http.get<Doctor[]>(`${API_BASE_URL}/api/doctors`).subscribe({
       next: (data) => {
         this.doctors = data;
       },
-      error: (err) => {
-        console.warn('Không kết nối được API. Kích hoạt dữ liệu dự phòng bác sĩ ĐKNG...', err);
-        this.doctors = [
-          {
-            doctorId: 1,
-            fullName: 'BS CKII. Ngô Trung Nam',
-            avatar: 'anhbs3.jpg',
-            experienceYears: 10,
-            specialization: { name: 'Nội tim mạch' },
-            hospital: {
-              hospitalId: 1,
-              name: 'Bệnh viện đa khoa tỉnh Bình Định',
-              address: '106 Nguyễn Huệ, Phường Quy Nhơn, Tỉnh Gia Lai',
-              rating: 0,
-              reviewCount: 0,
-              isVerified: true
-            }
-          }
-        ];
+      error: () => {
+        this.doctors = [];
       }
     });
   }
 
   getLogoPath(image?: string): string {
-    if (!image) return 'assets/images/logo.png';
-    return image.startsWith('images/') ? `assets/${image}` : `assets/images/anhbenhvien/${image}`;
+    return hospitalImagePath(image);
   }
 
   getDoctorAvatarPath(avatar?: string): string {
-    return avatar ? `assets/images/anhbacsi/${avatar}` : 'assets/images/doctor.png';
+    return doctorAvatarPath(avatar);
   }
 
-  onImgError(event: any, type: 'hospital' | 'doctor'): void {
-    event.target.src = type === 'hospital' ? 'assets/images/logo.png' : 'assets/images/doctor.png';
+  onImgError(event: Event, type: 'hospital' | 'doctor'): void {
+    (event.target as HTMLImageElement).src = type === 'hospital' ? FALLBACK_LOGO : FALLBACK_DOCTOR;
   }
 
   get paginatedHospitals(): Hospital[] {
@@ -182,7 +143,7 @@ export class Dkng implements OnInit {
   openBookingModal(id: number, name: string): void {
     if (!this.isLoggedIn) {
       if (confirm('Vui lòng đăng nhập để đặt lịch khám ngoài giờ!')) {
-        this.router.navigate(['/account/login']);
+        this.router.navigate(['/login']);
       }
       return;
     }
@@ -202,13 +163,14 @@ export class Dkng implements OnInit {
 
   onBookingSubmit(): void {
     const body = new URLSearchParams({
+      userId: this.getUserId(),
       hospitalId: this.bookingData.id.toString(),
       date: this.bookingData.date,
       time: this.bookingData.time,
       specialty: this.bookingData.specialty
     });
 
-    this.http.post<any>('http://localhost:5213/api/appointments', body.toString(), {
+    this.http.post<any>(`${API_BASE_URL}/api/appointments`, body.toString(), {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).subscribe({
       next: (data) => {
