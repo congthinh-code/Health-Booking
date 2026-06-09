@@ -1,0 +1,118 @@
+<div class="container-patient">
+
+  <div class="sidebar">
+    <div class="card">
+      <div class="sidebar-avatar">
+        <img [src]="profileData?.avatar ? profileData.avatar : 'assets/images/default-avatar.png'" alt="Avatar" />
+
+        <div class="camera-btn" (click)="avatarInput.click()">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+
+        <input type="file" #avatarInput (change)="onAvatarSelected($event)" hidden accept="image/*" />
+      </div>
+
+      <div class="profile-info">
+        <h3 class="patient-name">
+          {{ profileData?.fullName || 'Chưa cập nhật' }}
+        </h3>
+        
+        <p>
+          <i class="bi bi-envelope"></i> {{ profileData?.email }}
+        </p>
+        <p>
+          <i class="bi bi-telephone"></i> {{ profileData?.phone }}
+        </p>
+        <p>
+          <i class="bi bi-geo-alt"></i> {{ profileData?.address }}
+        </p>
+
+        <a routerLink="/patient/editprofile" class="btn btn-primary mt-3 w-100" style="display: block !important; background-color: #d63384 !important; color: white !important; border: none; border-radius: 20px; padding: 8px;">
+            <i class="fa-solid fa-edit"></i> Chỉnh sửa hồ sơ
+        </a>
+      </div>
+    </div>
+
+    <div class="quick-stats">
+      <h5>Thống kê nhanh</h5>
+      <div class="stat-item">
+        <span class="label">Tổng lịch hẹn</span>
+        <span class="value">{{ stats?.total }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">Chờ xác nhận</span>
+        <span class="value">{{ stats?.pending }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">Hoàn thành</span>
+        <span class="value">{{ stats?.completed }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">Đã hủy</span>
+        <span class="value">{{ stats?.cancelled }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+      
+      <div class="appointments-section">
+        <div class="section-header">
+          <h2>📅 Lịch hẹn bác sĩ</h2>
+
+          <div class="appointment-filter">
+            <button class="filter" [class.active]="currentFilter === 'all'" (click)="filterAppointments('all')">Tất cả</button>
+            <button class="filter" [class.active]="currentFilter === 'pending'" (click)="filterAppointments('pending')">Chờ</button>
+            <button class="filter" [class.active]="currentFilter === 'completed'" (click)="filterAppointments('completed')">Hoàn thành</button>
+            <button class="filter" [class.active]="currentFilter === 'cancelled'" (click)="filterAppointments('cancelled')">Đã hủy</button>
+          </div>
+        </div>
+
+        <div *ngIf="filteredAppointments.length > 0; else noAppointments">
+          <div class="appointment-card" *ngFor="let item of filteredAppointments">
+            <h5>{{ item.doctor?.fullName }}</h5>
+            <p><strong>Ngày khám:</strong> {{ item.appointmentDate | date: 'dd/MM/yyyy HH:mm' }}</p>
+            <p>
+              <strong>Trạng thái:</strong>
+              <span class="badge" [ngClass]="{
+                'bg-warning': item.status === 0,
+                'bg-primary': item.status === 1,
+                'bg-success': item.status === 2,
+                'bg-danger': item.status === 3
+              }">
+                {{ getStatusText(item.status) }}
+              </span>
+            </p>
+          </div>
+        </div>
+        <ng-template #noAppointments><p>Chưa có lịch hẹn nào.</p></ng-template>
+      </div>
+
+      <div class="requests-section">
+        <div class="section-header">
+          <h2>📋 Lịch khám đã đặt qua form</h2>
+        </div>
+
+        <div *ngIf="bookingRequests.length > 0; else noRequests">
+          <div class="booking-request-card" *ngFor="let item of bookingRequests">
+            <div class="booking-header">
+              <div>
+                <h4>{{ item.hospital?.name }}</h4>
+                <p class="booking-info">
+                  Ngày {{ item.appointmentDate | date: 'dd/MM/yyyy HH:mm' }} • Chuyên khoa: {{ item.specialization?.name }}
+                </p>
+              </div>
+              <span class="status-badge" [ngClass]="item.status === 1 ? 'confirmed' : 'pending'">
+                {{ item.status === 1 ? 'Đã Xác Nhận' : 'Đang Chờ Duyệt' }}
+              </span>
+            </div>
+            <p class="booking-note" [class.success]="item.status === 1">
+              {{ item.status === 1 ? 'Lịch khám của bạn đã được xác nhận. Vui lòng đến đúng giờ theo lịch hẹn.' : 'Yêu cầu của bạn đang được đội ngũ chăm sóc khách hàng xử lý.' }}
+            </p>
+          </div>
+        </div>
+        <ng-template #noRequests><p>Chưa có yêu cầu nào.</p></ng-template>
+      </div>
+
+  </div>
+</div>
