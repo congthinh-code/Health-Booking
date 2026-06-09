@@ -129,7 +129,10 @@ namespace health_booking_api.Controllers
         [HttpPost("verify")]
         public async Task<IActionResult> VerifyAccount([FromBody] VerifyDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            var user = await _context.Users
+                .Include(u => u.Patient)
+                .Include(u => u.Doctor)
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (user == null)
             {
                 return BadRequest(new { success = false, message = "❌ Email không tồn tại!" });
@@ -158,6 +161,42 @@ namespace health_booking_api.Controllers
             // Xóa thông báo chứa mã cũ để dọn dẹp dữ liệu
             _context.Notifications.Remove(lastNotification);
             await _context.SaveChangesAsync();
+
+            try
+            {
+                string welcomeMessage = "";
+
+                if (user.Role == "Doctor" && user.Doctor != null)
+                {
+                    welcomeMessage = $"🎉 Chào mừng bác sĩ {user.Doctor.FullName} đến với HealthMeet";
+                }
+                else if (user.Role == "Patient" && user.Patient != null)
+                {
+                    welcomeMessage = $"🎉 Chào mừng bạn {user.Patient.FullName} đến với HealthMeet";
+                }
+                else
+                {
+                    welcomeMessage = $"🎉 Chào mừng bạn đến với HealthMeet";
+                }
+
+                // Khởi tạo một dòng thông báo chào mừng mới lưu thẳng vào DB
+                var welcomeNotification = new Notification
+                {
+                    UserId = user.UserId,
+                    Message = welcomeMessage,
+                    CreatedAt = DateTime.Now,
+                    IsRead = false // Đặt mặc định bằng false để bên Angular nhận diện là tin nhắn mới tinh
+                };
+
+                _context.Notifications.Add(welcomeNotification);
+                await _context.SaveChangesAsync(); // Lưu chính thức xuống SQL Server
+            }
+            catch (Exception ex)
+            {
+                // Nếu chẳng may lỗi tạo thông báo chào mừng, ta ghi log lại 
+                // nhưng vẫn cho user xác thực thành công để không làm gián đoạn trải nghiệm của họ
+                Console.WriteLine("Lỗi tạo thông báo chào mừng: " + ex.Message);
+            }
 
             return Ok(new { success = true, message = "✅ Xác minh tài khoản thành công! Bạn có thể đăng nhập ngay." });
         }
