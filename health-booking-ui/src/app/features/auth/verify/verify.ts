@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-verify',
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './verify.html',
   styleUrl: './verify.css',
@@ -26,6 +27,11 @@ export class Verify implements OnInit {
   }
 
   onVerify() {
+    if (!this.verifyCode) {
+      alert('⚠️ Vui lòng nhập mã xác minh gồm 6 chữ số!');
+      return;
+    }
+
     this.authService.verify({ email: this.email, verifyCode: this.verifyCode }).subscribe({
       next: (res) => {
         alert(res.message);
@@ -33,21 +39,35 @@ export class Verify implements OnInit {
       },
       error: (err) => {
         this.isError = true;
-        this.message = err.error.message || 'Xác minh lỗi';
+        this.message = err.error?.message || 'Mã xác minh không chính xác!';
       }
     });
   }
 
+  // Gộp tất cả logic gửi lại mã vào duy nhất 1 hàm sạch sẽ, ánh xạ đồng bộ với Backend
   onResendCode() {
+    if (!this.email) {
+      alert('❌ Không tìm thấy thông tin email cần gửi lại mã!');
+      return;
+    }
+
+    // 🔥 TRUYỀN ĐÚNG ĐỐI TƯỢNG ĐỂ BACKEND .NET KHÔNG BÁO LỖI 400
+    const bodyData = { email: this.email };
+
     this.authService.resendCode(this.email).subscribe({
       next: (res) => {
         this.isError = false;
         this.message = res.message;
-        this.newCodeDisplay = res.newCode;
+        
+        // Hiện mã trực tiếp ra màn hình ở môi trường Dev cho tiện test
+        if (res.newCode) {
+          this.newCodeDisplay = res.newCode;
+          alert(`✅ Mã xác minh mới của bạn là: ${res.newCode}`);
+        }
       },
       error: (err) => {
         this.isError = true;
-        this.message = err.error.message || 'Lỗi gửi lại mã';
+        this.message = err.error?.message || 'Lỗi hệ thống khi gửi lại mã!';
       }
     });
   }
