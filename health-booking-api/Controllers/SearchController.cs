@@ -26,13 +26,8 @@ namespace health_booking_api.Controllers
 
             // 2. Tìm kiếm Bác sĩ (Ưu tiên ép về ToLower)
             var doctors = await _context.Doctors
-                .Include(d => d.Specialization)
-                .Include(d => d.Hospital)
                 .Where(d =>
-                    d.FullName.ToLower().Contains(keyword) ||
-                    (d.Description != null && d.Description.ToLower().Contains(keyword)) ||
-                    (d.Specialization != null && d.Specialization.Name.ToLower().Contains(keyword)) ||
-                    (d.Hospital != null && d.Hospital.Name.ToLower().Contains(keyword))
+                    d.FullName.ToLower().Contains(keyword)
                 )
                 .Select(d => new
                 {
@@ -48,8 +43,7 @@ namespace health_booking_api.Controllers
             // 3. Tìm kiếm Bệnh viện (Ép về ToLower)
             var hospitals = await _context.Hospitals
                 .Where(h =>
-                    h.Name.ToLower().Contains(keyword) ||
-                    (h.Address != null && h.Address.ToLower().Contains(keyword))
+                    h.Name.ToLower().Contains(keyword)
                 )
                 .Select(h => new
                 {
