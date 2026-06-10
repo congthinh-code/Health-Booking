@@ -34,12 +34,12 @@ namespace health_booking_api.Controllers
                     notifyId = x.NotificationId,
                     message = x.Message,
                     createdAt = x.CreatedAt.ToString("HH:mm dd/MM/yyyy"),
-                    isNew = x.CreatedAt >= oneDayAgo ? 1 : 0
+                    isRead = x.IsRead
                 })
                 .ToListAsync();
 
             int unreadCount = await _context.Notifications
-                .CountAsync(x => x.UserId == userId && x.CreatedAt >= oneDayAgo);
+                .CountAsync(x => x.UserId == userId && !x.IsRead);
 
             return Ok(new
             {
@@ -49,19 +49,24 @@ namespace health_booking_api.Controllers
             });
         }
 
-        // 🟢 API XÓA THÔNG BÁO
-        [HttpDelete("delete/{notifyId}/{userId}")]
-        public async Task<IActionResult> DeleteNotification(int notifyId, int userId)
+        [HttpPost("mark-as-read/{userId}")]
+        public async Task<IActionResult> MarkAsRead(int userId)
         {
-            var noti = await _context.Notifications
-                .FirstOrDefaultAsync(x => x.NotificationId == notifyId && x.UserId == userId);
+            var notifications = await _context.Notifications
+                .Where(x => x.UserId == userId && !x.IsRead)
+                .ToListAsync();
 
-            if (noti == null) return NotFound(new { success = false });
+            foreach (var item in notifications)
+            {
+                item.IsRead = true;
+            }
 
-            _context.Notifications.Remove(noti);
             await _context.SaveChangesAsync();
 
-            return Ok(new { success = true });
+            return Ok(new
+            {
+                success = true
+            });
         }
     }
 }
