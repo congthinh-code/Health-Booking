@@ -165,6 +165,7 @@ export class Dkcs implements OnInit {
       next: (data) => {
         if (data.success) {
           alert('Đặt lịch khám tại cơ sở thành công!');
+          window.dispatchEvent(new Event('notificationUpdated'));
           this.closeModal();
         } else {
           alert('Lỗi: ' + data.message);

@@ -43,4 +43,12 @@ export class DoctorService {
   rejectAppointment(id: number, reason: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/appointments/${id}/reject`, { reason });
   }
+
+  getNotifications(userId: number): Observable<any> {
+    return this.http.get(`https://localhost:7291/api/Notification/get-notifications/${userId}`);
+  }
+
+  deleteNotification(notifyId: number, userId: number): Observable<any> {
+    return this.http.delete(`https://localhost:7291/api/Notification/delete/${notifyId}/${userId}`);
+  }
 }

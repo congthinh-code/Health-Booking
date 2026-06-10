@@ -68,10 +68,45 @@
   </div>
 
   <div class="doctor-main">
-    <div class="page-header">
+    <div class="page-header" style="position: relative;">
       <div>
         <h1>Lịch hẹn của bác sĩ</h1>
         <p class="page-subtitle">Quản lý các cuộc hẹn với bệnh nhân</p>
+      </div>
+
+      <!-- Nút thông báo hiển thị số (Badge) -->
+      <div class="doctor-notification-wrapper" style="position: relative; display: inline-block;">
+        <button class="btn-doctor-notification" (click)="toggleNotification()">
+          <i class="fa-solid fa-bell"></i>
+          <span class="notification-badge" *ngIf="unreadCount > 0">
+            {{ unreadCount }}
+          </span>
+        </button>
+
+        <!-- Dropdown hiển thị danh sách thông báo -->
+        <div class="doctor-notification-dropdown" *ngIf="isNotificationOpen">
+          <div class="dropdown-header">
+            <span>Thông báo mới nhất</span>
+            <span *ngIf="unreadCount > 0" class="mark-all-read" (click)="markAllAsRead()">Đánh dấu đã đọc</span>
+          </div>
+          <div class="dropdown-list">
+            <div class="dropdown-item" *ngFor="let noti of notifications" [style.background-color]="noti.isNew === 1 ? '#fff6f9' : 'transparent'">
+              <p [style.font-weight]="noti.isNew === 1 ? '600' : 'normal'">
+                {{ noti.message }}
+              </p>
+              <div class="item-footer">
+                <small>{{ noti.createdAt }}</small>
+                <button class="btn-delete-noti" (click)="deleteNoti(noti.notifyId, $event)">
+                  <i class="fa-solid fa-trash-can"></i> Xóa
+                </button>
+              </div>
+            </div>
+            <div class="dropdown-empty" *ngIf="notifications.length === 0">
+              <i class="fa-regular fa-bell-slash"></i>
+              <p>Chưa có thông báo nào.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
