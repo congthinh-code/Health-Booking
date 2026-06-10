@@ -39,7 +39,7 @@ export class Dkcs implements OnInit {
   bookingData = { hospitalId: 0, hospitalName: '', date: '', time: '', specialty: '' };
 
   currentPage = 1;
-  itemsPerPage = 4;
+  itemsPerPage = 3;
 
   constructor(
     private router: Router,
