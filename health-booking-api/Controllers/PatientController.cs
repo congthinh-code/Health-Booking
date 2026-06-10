@@ -197,7 +197,7 @@ namespace health_booking_api.Controllers
         }
 
         // ================= 4. API GET: LẤY LỊCH HẸN VÀ THỐNG KÊ (DASHBOARD DATA) =================
-        [HttpGet("dashboard-data/{userId}")]
+        [HttpGet("dashboard/{userId}")]
         public async Task<IActionResult> GetDashboardData(int userId)
         {
             try
