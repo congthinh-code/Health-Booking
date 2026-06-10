@@ -16,7 +16,11 @@
   (click)="onInputClick()">
   @if (showSearchResults) {
     <div class="search-results">
-      @if (searchResults.length > 0) {
+      @if (isSearching) {
+        <div class="search-item no-result">
+          Đang tìm kiếm...
+        </div>
+      } @else if (searchResults.length > 0) {
         @for (item of searchResults; track $index) {
           <a class="search-link" href="javascript:void(0)" (click)="navigateToSearchResult(item, $event)">
             <div class="search-item">
@@ -42,7 +46,7 @@
         }
       }
 
-      @if (searchResults.length === 0) {
+      @if (!isSearching && searchResults.length === 0) {
         <div class="search-item no-result">
           ❌ Không tìm thấy kết quả
         </div>

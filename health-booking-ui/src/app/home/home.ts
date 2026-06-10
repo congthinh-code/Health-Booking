@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FALLBACK_LOGO, specialtyIconPath } from '../core/utils/image.util';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Subject, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { Title } from '@angular/platform-browser';
 import { API_BASE_URL } from '../core/config/api.config';
@@ -19,6 +17,8 @@ import { AuthService } from '../core/services/auth-service/auth.service';
 })
 export class Home implements OnInit {
   isLoggedIn = false;
+  private searchTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private searchRequestId = 0;
 
   constructor(
     private titleService: Title,
@@ -42,7 +42,6 @@ export class Home implements OnInit {
     });
     this.titleService.setTitle('HealthBookingUi'); 
     this.loadBookingFormData();
-    this.initSearchDebounce();
   }
  
   specialties = [
@@ -74,7 +73,7 @@ export class Home implements OnInit {
   searchQuery: string = '';
   searchResults: any[] = [];
   showSearchResults: boolean = false;
-  private searchSubject = new Subject<string>();
+  isSearching = false;
 
   isModalOpen: boolean = false;
   isSubmitting: boolean = false;
@@ -119,36 +118,49 @@ export class Home implements OnInit {
     this.isLoggedIn = this.getStoredUserId() !== null;
   }
 
-  initSearchDebounce() {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(query => {
-        if (query.trim().length === 0) {
-          this.searchResults = [];
-          this.showSearchResults = false;
-          return of([]);
-        }
-        // Đặt luôn trạng thái hiển thị khung là true để phục vụ hiển thị thông báo trống
-        this.showSearchResults = true;
-        return this.http.get<any[]>(`https://localhost:7291/api/Search/GetSearch?q=${encodeURIComponent(query)}`);
-      })
-    ).subscribe({
-      next: (data) => {
-        this.searchResults = data;
-        // Luôn luôn bằng true để HTML có thể kiểm tra xem mảng có data hay rỗng để hiện thông báo lỗi
-        this.showSearchResults = true; 
-      }
-    });
-  }
-
   onSearchInput() {
-    if (!this.searchQuery.trim()) {
+    const query = this.searchQuery.trim();
+    const requestId = ++this.searchRequestId;
+
+    if (this.searchTimeoutId) {
+      clearTimeout(this.searchTimeoutId);
+      this.searchTimeoutId = null;
+    }
+
+    if (!query) {
       this.searchResults = [];
       this.showSearchResults = false;
+      this.isSearching = false;
       return;
     }
-    this.searchSubject.next(this.searchQuery);
+
+    this.showSearchResults = true;
+    this.isSearching = true;
+    this.searchResults = [];
+
+    this.searchTimeoutId = setTimeout(() => {
+      this.http.get<any[]>(`${API_BASE_URL}/api/Search/GetSearch?q=${encodeURIComponent(query)}`).subscribe({
+        next: (data) => {
+          if (requestId !== this.searchRequestId) {
+            return;
+          }
+
+          this.searchResults = data || [];
+          this.isSearching = false;
+          this.showSearchResults = true;
+        },
+        error: (err) => {
+          if (requestId !== this.searchRequestId) {
+            return;
+          }
+
+          console.error('Lỗi tìm kiếm:', err);
+          this.searchResults = [];
+          this.isSearching = false;
+          this.showSearchResults = true;
+        }
+      });
+    }, 250);
   }
 
   navigateToSearchResult(item: any, event: Event) {
