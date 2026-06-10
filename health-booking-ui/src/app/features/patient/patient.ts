@@ -129,6 +129,8 @@ export class PatientComponent implements OnInit {
       this.filteredAppointments = [...this.allAppointments];
     } else if (status === 'pending') {
       this.filteredAppointments = this.allAppointments.filter(a => a.status === 0); 
+    } else if (status === 'confirmed') {
+      this.filteredAppointments = this.allAppointments.filter(a => a.status === 1); 
     } else if (status === 'completed') {
       this.filteredAppointments = this.allAppointments.filter(a => a.status === 2); 
     } else if (status === 'cancelled') {
