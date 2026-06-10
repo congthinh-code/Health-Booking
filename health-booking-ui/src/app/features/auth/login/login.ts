@@ -48,7 +48,12 @@ export class Login {
           storage.setItem('user_id', userId.toString());
           storage.setItem('name', name);
           storage.setItem('avatar', avatar);
+          storage.setItem('userAvatar', avatar);
           storage.setItem('role', role);
+
+          if (typeof (this.authService as any).updateProfile === 'function') {
+    (this.authService as any).updateProfile(name, avatar);
+  }
 
           // 4. Cập nhật trạng thái và điều hướng
           this.authService.setLoggedInStatus(true);

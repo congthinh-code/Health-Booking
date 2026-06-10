@@ -1,28 +1,35 @@
-<div class="doctor-container" *ngIf="doctor">
-  <!-- SIDEBAR -->
+<div class="doctor-container">
   <div class="doctor-sidebar">
     <div class="doctor-profile-card">
       <div class="profile-avatar">
-        <img [src]="getAvatarUrl(doctor.avatar)" alt="Avatar Bác sĩ" />
+        <img [src]="doctor ? getAvatarUrl(doctor.avatar) : 'assets/images/default-avatar.png'" alt="Avatar Bác sĩ" />
         <div class="avatar-badge" style="cursor: pointer;" (click)="avatarInput.click()">
           <i class="fa-solid fa-camera"></i>
         </div>
         <input #avatarInput type="file" hidden accept="image/*" (change)="onAvatarChange($event)" />
       </div>
+      
       <div class="profile-info">
-        <h3>{{ doctor.fullName }}</h3>
-        <p class="specialty"><i class="fa-solid fa-stethoscope"></i> {{ doctor.specialization?.name }}</p>
-        <p class="experience"><i class="fa-solid fa-hospital"></i> {{ doctor.hospital?.name }}</p>
-        <p class="schedule">{{ doctor.experienceYears }} năm kinh nghiệm</p>
+        <h3>{{ doctor?.fullName || 'Đang tải...' }}</h3>
+        
+        <p class="specialty" *ngIf="doctor?.specialization">
+          <i class="fa-solid fa-stethoscope"></i> {{ doctor.specialization?.name }}
+        </p>
+        <p class="experience" *ngIf="doctor?.hospital">
+          <i class="fa-solid fa-hospital"></i> {{ doctor.hospital?.name }}
+        </p>
+        <p class="schedule" *ngIf="doctor?.experienceYears">
+          <i class="fa-solid fa-briefcase"></i> {{ doctor.experienceYears }} năm kinh nghiệm
+        </p>
       </div>
-      <div class="profile-actions">
+
+      <div class="profile-actions" *ngIf="doctor && doctor.doctorId > 0">
         <a [routerLink]="['/doctor/edit', doctor.doctorId]" class="btn-edit-profile">
           Chỉnh sửa hồ sơ
         </a>
       </div>
     </div>
 
-    <!-- QUICK STATS -->
     <div class="quick-stats">
       <h4>Thống kê</h4>
       
@@ -57,11 +64,9 @@
           <span class="stat-label">Đã hủy</span>
         </div>
       </div>
-      
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="doctor-main">
     <div class="page-header">
       <div>
@@ -70,15 +75,19 @@
       </div>
     </div>
 
-    <!-- APPOINTMENTS SECTION -->
     <div class="appointments-section">
       <div class="section-header">
         <h2><i class="fa-solid fa-calendar-days"></i> Danh sách lịch hẹn</h2>
       </div>
 
-      <div class="empty-state" *ngIf="appointments.length === 0">
+      <div class="empty-state" *ngIf="appointments.length === 0 && total === 0">
+        <i class="fa-solid fa-spinner fa-spin" style="color: #f08080;"></i>
+        <h3>Đang tải danh sách lịch khám...</h3>
+      </div>
+
+      <div class="empty-state" *ngIf="appointments.length === 0 && total > 0">
         <i class="fa-regular fa-calendar-xmark"></i>
-        <h3>Chưa có lịch hẹn nào.</h3>
+        <h3>Chưa có lịch hẹn nào dành cho bạn.</h3>
       </div>
 
       <div class="appointments-grid" *ngIf="appointments.length > 0">
