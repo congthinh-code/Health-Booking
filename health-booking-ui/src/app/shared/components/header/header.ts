@@ -75,11 +75,38 @@ export class Header implements OnInit {
     // Nếu mở chuông ra và thấy đang có số thông báo mới, ta tạm ẩn số đi trên UI
     // Gợi ý: Nên gọi thêm 1 API cập nhật trạng thái "Đã đọc" ở DB tại đây nếu cần thiết
     if (this.isNotificationOpen && this.unreadCount > 0) {
-      this.unreadCount = 0;
+      this.markNotificationsAsRead();
     }
     
     this.cdr.detectChanges();
   }
+
+  markNotificationsAsRead() {
+
+  const userId =
+    localStorage.getItem('user_id') ||
+    sessionStorage.getItem('user_id');
+
+  if (!userId) return;
+
+  this.http.post(
+    `https://localhost:7291/api/Notification/mark-as-read/${userId}`,
+    {}
+  ).subscribe({
+    next: () => {
+      this.unreadCount = 0;
+
+      this.notifications.forEach(x => {
+        x.isRead = true;
+      });
+
+      this.cdr.detectChanges();
+    },
+    error: err => {
+      console.error('Lỗi cập nhật đã đọc', err);
+    }
+  });
+}
 
   resetHeader() {
     this.userName = '';
