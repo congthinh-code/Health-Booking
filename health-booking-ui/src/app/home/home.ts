@@ -127,73 +127,36 @@ export class Home implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     
-    if (item.url) {
-      // Xóa ô tìm kiếm và ẩn dropdown
-      this.searchQuery = '';
-      this.showSearchResults = false;
-      
-      // Parse URL để tách path và query string
-      // URL từ API: /DVYT/ĐKBS?id=17
-      const urlParts = item.url.split('?');
-      const pathPart = urlParts[0]; // /DVYT/ĐKBS
-      const queryPart = urlParts[1]; // id=17
-      
-      // Decode path: /DVYT/ĐKBS -> pages/DVYT/dkbs
-      const normalizedPath = this.normalizeRoutePath(pathPart);
-      
-      // Parse query parameters
-      const queryParams: any = {};
-      if (queryPart) {
-        queryPart.split('&').forEach((param: string) => {
-          const [key, value] = param.split('=');
-          if (key && value) {
-            // Map API parameter names to component parameter names
-            let paramKey = key;
-            if (key === 'id' && normalizedPath.includes('dkbs')) {
-              paramKey = 'doctorId'; // API trả về 'id', nhưng component cần 'doctorId'
-            }
-            queryParams[paramKey] = decodeURIComponent(value);
-          }
-        });
-      }
-      
-      const queryString = Object.keys(queryParams).length > 0
-        ? `?${new URLSearchParams(queryParams).toString()}`
-        : '';
-      const internalUrl = `/${normalizedPath}${queryString}`;
-
-      console.log('Navigate to:', internalUrl);
-
-      // Navigate bằng URL hoàn chỉnh để tránh router tách sai segment
-      this.router.navigateByUrl(internalUrl);
+    const internalUrl = this.getSearchResultUrl(item);
+    if (!internalUrl) {
+      return;
     }
+
+    this.searchQuery = '';
+    this.searchResults = [];
+    this.showSearchResults = false;
+
+    this.router.navigateByUrl(internalUrl);
   }
 
-  // Normalize path: chuyển ký tự Tiếng Việt thành ASCII, thêm prefix pages/
-  private normalizeRoutePath(path: string): string {
-    // Xóa dấu / ở đầu
-    let normalized = path.startsWith('/') ? path.substring(1) : path;
-    
-    // Map các ký tự Tiếng Việt sang route path
-    const pathMap: { [key: string]: string } = {
-      'ĐKBS': 'dkbs',   // Đặt khám bác sĩ -> dkbs
-      'ĐKCK': 'dkck',   // Đặt khám chuyên khoa -> dkck
-      'ĐKCS': 'dkcs',   // Đặt khám tại cơ sở -> dkcs
-      'ĐKNG': 'dkng',   // Đặt khám ngoài -> dkng
-      'TTVP': 'ttvp'    // Tra tìm thông tin -> ttvp
-    };
+  private getSearchResultUrl(item: any): string | null {
+    const id = item?.id;
 
-    // Replace từng ký tự Tiếng Việt bằng lowercase tương ứng
-    for (const [key, value] of Object.entries(pathMap)) {
-      normalized = normalized.replace(new RegExp(key, 'i'), value);
+    if (id == null) {
+      return null;
     }
-    
-    // Thêm prefix 'pages/' nếu không có
-    if (!normalized.startsWith('pages/')) {
-      normalized = 'pages/' + normalized;
+
+    switch (item?.type) {
+      case 'doctor':
+        return `/pages/DVYT/dkbs?doctorId=${encodeURIComponent(id)}`;
+      case 'hospital':
+        return `/pages/DVYT/dkcs?hospitalId=${encodeURIComponent(id)}`;
+      case 'specialization':
+      case 'specialty':
+        return `/pages/DVYT/dkck?specializationId=${encodeURIComponent(id)}`;
+      default:
+        return null;
     }
-    
-    return normalized;
   }
 
   @HostListener('document:click', ['$event'])
