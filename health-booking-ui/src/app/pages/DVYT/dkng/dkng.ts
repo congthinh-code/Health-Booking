@@ -53,7 +53,7 @@ export class Dkng implements OnInit {
   bookingData = { id: 0, name: '', date: '', time: '', specialty: '' };
 
   currentPage = 1;
-  itemsPerPage = 4;
+  itemsPerPage = 3;
   loadError = '';
 
   constructor(
