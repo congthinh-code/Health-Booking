@@ -52,11 +52,17 @@ export class Edit implements OnInit {
           experienceYears:  doctor.experienceYears,
           description:      doctor.description
         });
-        this.avatarPreviewUrl = doctor.avatar
-          ? (doctor.avatar.includes('anhbs')
-              ? `assets/images/anhbacsi/${doctor.avatar}`
-              : `assets/images/userAvatar/${doctor.avatar}`)
-          : 'https://via.placeholder.com/150?text=Avatar';
+        if (!doctor.avatar) {
+          this.avatarPreviewUrl = 'assets/images/anhbacsi/anhbs1.jpg';
+        } else if (doctor.avatar.startsWith('/uploads')) {
+          this.avatarPreviewUrl = `https://localhost:7291${doctor.avatar}`;
+        } else if (doctor.avatar.includes('anhbs')) {
+          this.avatarPreviewUrl = `assets/images/anhbacsi/${doctor.avatar}`;
+        } else if (doctor.avatar.startsWith('http://') || doctor.avatar.startsWith('https://') || doctor.avatar.startsWith('assets/')) {
+          this.avatarPreviewUrl = doctor.avatar;
+        } else {
+          this.avatarPreviewUrl = `assets/images/userAvatar/${doctor.avatar}`;
+        }
       },
       error: (err) => console.error(err)
     });

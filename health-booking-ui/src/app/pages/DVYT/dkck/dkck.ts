@@ -28,8 +28,7 @@ export class Dkck implements OnInit {
   }
 
   loadSpecializations(): void {
-    // this.http.get<Specialization[]>(`${API_BASE_URL}/api/specializations`).subscribe({
-    this.http.get<Specialization[]>(`https://localhost:7291/api/specializations`).subscribe({
+    this.http.get<Specialization[]>(`${API_BASE_URL}/api/specializations`).subscribe({
       next: (data) => {
         this.specializations = data;
         this.loadError = '';

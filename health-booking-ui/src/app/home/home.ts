@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -16,6 +17,21 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 })
 export class Home implements OnInit {
 
+  constructor(
+    private titleService: Title,
+    private http: HttpClient,
+    private eRef: ElementRef,
+    private router: Router
+  ) {
+    this.todayStr = new Date().toISOString().split('T')[0];
+  }
+
+  ngOnInit(): void {
+    this.titleService.setTitle('HealthBookingUi'); 
+    this.loadBookingFormData();
+    this.initSearchDebounce();
+  }
+ 
   specialties = [
     'Bác sĩ gia đình',
     'Da liễu',
@@ -64,15 +80,6 @@ export class Home implements OnInit {
     appointmentDate: '',
     appointmentTime: ''
   };
-
-  constructor(private http: HttpClient, private eRef: ElementRef, private router: Router) {
-    this.todayStr = new Date().toISOString().split('T')[0];
-  }
-
-  ngOnInit() {
-    this.loadBookingFormData();
-    this.initSearchDebounce();
-  }
 
   loadBookingFormData(): void {
     this.http.get<any>('https://localhost:7291/api/CSYT/GetBookingFormData').subscribe({

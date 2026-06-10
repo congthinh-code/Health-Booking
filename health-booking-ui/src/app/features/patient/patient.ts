@@ -104,7 +104,7 @@ export class PatientComponent implements OnInit {
     });
 
     // 2. GỌI API LỊCH HẸN VÀ THỐNG KÊ 
-    this.http.get<any>(`${this.baseUrl}/dashboard-data/${userId}`).subscribe({
+    this.http.get<any>(`${this.baseUrl}/dashboard/${userId}`).subscribe({
       next: (res: any) => {
         if (res && res.success) {
           this.allAppointments = res.appointments || [];
@@ -116,7 +116,7 @@ export class PatientComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.warn('⚠️ API dashboard-data đang bị lỗi hoặc chưa viết bên C#, nhưng thông tin cá nhân vẫn hiện bình thường nha!');
+        console.warn('⚠️ API dashboard đang bị lỗi hoặc chưa viết bên C#, nhưng thông tin cá nhân vẫn hiện bình thường nha!');
       }
     });
   }
@@ -129,6 +129,8 @@ export class PatientComponent implements OnInit {
       this.filteredAppointments = [...this.allAppointments];
     } else if (status === 'pending') {
       this.filteredAppointments = this.allAppointments.filter(a => a.status === 0); 
+    } else if (status === 'confirmed') {
+      this.filteredAppointments = this.allAppointments.filter(a => a.status === 1); 
     } else if (status === 'completed') {
       this.filteredAppointments = this.allAppointments.filter(a => a.status === 2); 
     } else if (status === 'cancelled') {

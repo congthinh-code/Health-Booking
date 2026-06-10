@@ -80,12 +80,14 @@
         <h2><i class="fa-solid fa-calendar-days"></i> Danh sách lịch hẹn</h2>
       </div>
 
-      <div class="empty-state" *ngIf="appointments.length === 0 && total === 0">
+      <!-- Đang tải -->
+      <div class="empty-state" *ngIf="isLoading">
         <i class="fa-solid fa-spinner fa-spin" style="color: #f08080;"></i>
         <h3>Đang tải danh sách lịch khám...</h3>
       </div>
 
-      <div class="empty-state" *ngIf="appointments.length === 0 && total > 0">
+      <!-- Tải xong nhưng không có lịch -->
+      <div class="empty-state" *ngIf="!isLoading && appointments.length === 0">
         <i class="fa-regular fa-calendar-xmark"></i>
         <h3>Chưa có lịch hẹn nào dành cho bạn.</h3>
       </div>
