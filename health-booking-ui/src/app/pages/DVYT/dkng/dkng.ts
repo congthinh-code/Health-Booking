@@ -181,6 +181,7 @@ export class Dkng implements OnInit {
       next: (data) => {
         if (data.success) {
           alert('Đặt lịch khám ngoài giờ thành công!');
+          window.dispatchEvent(new Event('notificationUpdated'));
           this.closeModal();
         } else {
           alert('Lỗi: ' + data.message);

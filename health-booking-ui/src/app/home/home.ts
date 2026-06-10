@@ -269,6 +269,7 @@ export class Home implements OnInit {
         alert(res.message); 
         
         if (res.success) {
+          window.dispatchEvent(new Event('notificationUpdated'));
           this.closeBooking(); // Đặt lịch thành công -> Đóng Modal, xoá dữ liệu cũ trên form
         } else {
           this.isSubmitting = false; // Nếu API báo lỗi dữ liệu, giữ nguyên form cho người dùng sửa

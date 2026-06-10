@@ -31,6 +31,20 @@ namespace health_booking_api.Controllers
             appointment.Status = AppointmentStatus.Confirmed; // Hoặc bằng 1 tùy theo cách bạn định nghĩa Enum
 
             _context.Appointments.Update(appointment);
+
+            var patient = await _context.Patients.FindAsync(appointment.PatientId);
+            if (patient != null)
+            {
+                var notification = new Notification
+                {
+                    UserId = patient.UserId,
+                    Message = $"Lịch hẹn khám ngày {appointment.AppointmentDate:dd/MM/yyyy HH:mm} của bạn đã được bác sĩ xác nhận.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false
+                };
+                _context.Notifications.Add(notification);
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(new { success = true, message = "Xác nhận lịch khám thành công!" });
@@ -55,6 +69,26 @@ namespace health_booking_api.Controllers
             // if (payload.ContainsKey("reason")) { appointment.CancelReason = payload["reason"]; }
 
             _context.Appointments.Update(appointment);
+
+            var patient = await _context.Patients.FindAsync(appointment.PatientId);
+            if (patient != null)
+            {
+                string reason = payload != null && payload.ContainsKey("reason") ? payload["reason"] : "";
+                string msg = $"Lịch hẹn khám ngày {appointment.AppointmentDate:dd/MM/yyyy HH:mm} của bạn đã bị từ chối.";
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    msg += $" Lý do: {reason}";
+                }
+                var notification = new Notification
+                {
+                    UserId = patient.UserId,
+                    Message = msg,
+                    CreatedAt = DateTime.Now,
+                    IsRead = false
+                };
+                _context.Notifications.Add(notification);
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(new { success = true, message = "Đã từ chối và hủy lịch khám thành công!" });
@@ -143,6 +177,29 @@ namespace health_booking_api.Controllers
             };
 
             _context.Appointments.Add(appointment);
+
+            var doctor = await _context.Doctors.FindAsync(resolvedDoctorId);
+            if (doctor != null)
+            {
+                var notification = new Notification
+                {
+                    UserId = doctor.UserId,
+                    Message = $"Bạn có một lịch khám mới chờ xác nhận từ bệnh nhân {patient.FullName} vào ngày {appointmentDate:dd/MM/yyyy HH:mm}.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false
+                };
+                _context.Notifications.Add(notification);
+            }
+
+            var patientNotification = new Notification
+            {
+                UserId = uid,
+                Message = $"✅ Bạn đã đặt lịch khám với bác sĩ thành công vào lúc {appointmentDate:HH\\:mm} ngày {appointmentDate:dd/MM/yyyy}. Vui lòng chờ bác sĩ xác nhận.",
+                CreatedAt = DateTime.Now,
+                IsRead = false
+            };
+            _context.Notifications.Add(patientNotification);
+
             await _context.SaveChangesAsync();
 
             return Ok(new { success = true, message = "Đặt lịch khám thành công!" });
