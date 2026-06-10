@@ -1,0 +1,39 @@
+<div class="tab-container">
+  <a routerLink="/pages/bvcong" routerLinkActive="active" class="tab-item">
+    Bệnh viện công lập
+  </a>
+  <a routerLink="/pages/bvtu" routerLinkActive="active" class="tab-item">
+    Bệnh viện tư nhân
+  </a>
+</div>
+
+<h2 class="title">Bệnh viện tư nhân</h2>
+<h3 class="subtitle">Danh sách các bệnh viện tư nhân tại Bình Định</h3>
+
+<div class="container" id="hospitalGrid">
+  <div class="card" *ngFor="let bv of getPaginatedHospitals()">
+    <img [src]="'assets/' + bv.image" [alt]="bv.name" />
+
+    <h3 class="name">{{ bv.name }}</h3>
+    <p class="address">{{ bv.address }}</p>
+
+    <div class="stars">
+      <span *ngFor="let star of getStars(bv.rating)">⭐</span>
+    </div>
+
+    <a *ngIf="bv.websiteUrl; else noUrl" class="btn" [href]="bv.websiteUrl" target="_blank" rel="noopener noreferrer">
+      Xem chi tiết
+    </a>
+    <ng-template #noUrl>
+      <a class="btn" href="#">Xem chi tiết</a>
+    </ng-template>
+  </div>
+</div>
+
+<div id="hospitalPagination" class="pagination" *ngIf="getTotalPages() > 1">
+  <button *ngFor="let page of getPagesArray()" 
+          [class.active]="page === currentPage"
+          (click)="changePage(page)">
+    {{ page }}
+  </button>
+</div>

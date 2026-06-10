@@ -10,6 +10,8 @@ import { QC } from './pages/LH/qc/qc';
 import { TD } from './pages/LH/td/td';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
 
+import { Bvcong } from './pages/CSYT/bvcong/bvcong';
+import { Bvtu } from './pages/CSYT/bvtu/bvtu';
 export const routes: Routes = [
   {
     path:'', component: Home
@@ -40,5 +42,11 @@ export const routes: Routes = [
   },
   {
     path: 'pages/LH/job-detail/:id', component: JobDetail
+  },
+  {
+    path: 'pages/bvcong', component: Bvcong
+  },
+  {
+    path: 'pages/bvtu', component: Bvtu
   }
 ];
