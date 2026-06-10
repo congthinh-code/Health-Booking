@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -58,7 +58,8 @@ export class Dkng implements OnInit {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -89,19 +90,23 @@ export class Dkng implements OnInit {
           isVerified: h.hospitalId <= 3
         }));
         this.loadError = '';
+        this.cdr.markForCheck();
       },
       error: () => {
         this.hospitals = [];
         this.loadError = 'Không tải được dữ liệu từ database. Vui lòng chạy API backend.';
+        this.cdr.markForCheck();
       }
     });
 
     this.http.get<Doctor[]>(`${API_BASE_URL}/api/doctors`).subscribe({
       next: (data) => {
         this.doctors = data;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.doctors = [];
+        this.cdr.markForCheck();
       }
     });
   }

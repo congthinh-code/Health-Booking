@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +21,7 @@ export class Dkck implements OnInit {
   specializations: Specialization[] = [];
   loadError = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadSpecializations();
@@ -32,10 +32,12 @@ export class Dkck implements OnInit {
       next: (data) => {
         this.specializations = data;
         this.loadError = '';
+        this.cdr.markForCheck();
       },
       error: () => {
         this.specializations = [];
         this.loadError = 'Không tải được danh sách chuyên khoa. Vui lòng chạy API backend (port 5213).';
+        this.cdr.markForCheck();
       }
     });
   }
