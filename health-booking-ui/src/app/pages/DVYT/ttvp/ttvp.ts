@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -50,7 +50,8 @@ export class Ttvp implements OnInit {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -75,11 +76,13 @@ export class Ttvp implements OnInit {
         this.hospitals = data;
         this.loadError = '';
         this.filterHospitals();
+        this.cdr.markForCheck();
       },
       error: () => {
         this.hospitals = [];
         this.filteredHospitals = [];
         this.loadError = 'Không tải được danh sách bệnh viện từ database. Vui lòng chạy API backend.';
+        this.cdr.markForCheck();
       }
     });
   }

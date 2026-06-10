@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
@@ -57,7 +57,8 @@ export class Dkbs implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -84,10 +85,12 @@ export class Dkbs implements OnInit {
         this.doctors = data;
         this.loadError = '';
         this.setSelectedDoctorFromQuery();
+        this.cdr.markForCheck();
       },
       error: () => {
         this.doctors = [];
         this.loadError = 'Không tải được danh sách bác sĩ từ database. Vui lòng chạy API backend.';
+        this.cdr.markForCheck();
       }
     });
   }
