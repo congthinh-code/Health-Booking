@@ -29,7 +29,6 @@ gprof/
 
 # Tránh lộ cấu hình Database và Mật khẩu ở máy cá nhân
 appsettings.Development.json
-**/appsettings.json
 
 # File rác hệ điều hành
 Thumbs.db
