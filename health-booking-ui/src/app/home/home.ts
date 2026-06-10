@@ -18,7 +18,6 @@ import { AuthService } from '../core/services/auth-service/auth.service';
 export class Home implements OnInit {
   isLoggedIn = false;
   private searchTimeoutId: ReturnType<typeof setTimeout> | null = null;
-  private searchRequestId = 0;
 
   constructor(
     private titleService: Title,
@@ -73,7 +72,6 @@ export class Home implements OnInit {
   searchQuery: string = '';
   searchResults: any[] = [];
   showSearchResults: boolean = false;
-  isSearching = false;
 
   isModalOpen: boolean = false;
   isSubmitting: boolean = false;
@@ -120,7 +118,6 @@ export class Home implements OnInit {
 
   onSearchInput() {
     const query = this.searchQuery.trim();
-    const requestId = ++this.searchRequestId;
 
     if (this.searchTimeoutId) {
       clearTimeout(this.searchTimeoutId);
@@ -130,33 +127,18 @@ export class Home implements OnInit {
     if (!query) {
       this.searchResults = [];
       this.showSearchResults = false;
-      this.isSearching = false;
       return;
     }
-
-    this.showSearchResults = true;
-    this.isSearching = true;
-    this.searchResults = [];
 
     this.searchTimeoutId = setTimeout(() => {
       this.http.get<any[]>(`${API_BASE_URL}/api/Search/GetSearch?q=${encodeURIComponent(query)}`).subscribe({
         next: (data) => {
-          if (requestId !== this.searchRequestId) {
-            return;
-          }
-
           this.searchResults = data || [];
-          this.isSearching = false;
           this.showSearchResults = true;
         },
         error: (err) => {
-          if (requestId !== this.searchRequestId) {
-            return;
-          }
-
           console.error('Lỗi tìm kiếm:', err);
           this.searchResults = [];
-          this.isSearching = false;
           this.showSearchResults = true;
         }
       });
