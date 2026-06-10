@@ -19,6 +19,11 @@ export class Dashboard implements OnInit {
   cancelled = 0;
   isLoading = true; // dùng để phân biệt "đang tải" vs "không có lịch hẹn"
 
+  // Biến thông báo
+  isNotificationOpen = false;
+  unreadCount = 0;
+  notifications: any[] = [];
+
   constructor(private doctorService: DoctorService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
@@ -41,6 +46,10 @@ export class Dashboard implements OnInit {
     };
     this.cdr.detectChanges(); // Cập nhật view ngay sau khi gán dữ liệu từ localStorage
   }
+
+    if (userId) {
+      this.loadNotifications(userId);
+    }
 
     this.doctorService.getDashboard(userId).subscribe({
       next: (data) => {
@@ -126,5 +135,49 @@ export class Dashboard implements OnInit {
       },
       error: () => alert('Upload avatar thất bại!')
     });
+  }
+
+  loadNotifications(userId: number) {
+    this.doctorService.getNotifications(userId).subscribe({
+      next: (res) => {
+        if (res && res.success) {
+          this.notifications = res.notifications || [];
+          this.unreadCount = res.unreadCount || 0;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => console.error('Lỗi lấy thông báo bác sĩ:', err)
+    });
+  }
+
+  toggleNotification() {
+    this.isNotificationOpen = !this.isNotificationOpen;
+    if (this.isNotificationOpen && this.unreadCount > 0) {
+      this.unreadCount = 0;
+    }
+    this.cdr.detectChanges();
+  }
+
+  deleteNoti(notifyId: number, event: Event) {
+    event.stopPropagation();
+    const userId = Number(sessionStorage.getItem('user_id') || localStorage.getItem('user_id'));
+    if (!userId) return;
+
+    if (confirm('Bạn có chắc chắn muốn xóa thông báo này?')) {
+      this.doctorService.deleteNotification(notifyId, userId).subscribe({
+        next: (res) => {
+          if (res && res.success) {
+            this.notifications = this.notifications.filter(n => n.notifyId !== notifyId);
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err) => console.error('Lỗi xóa thông báo:', err)
+      });
+    }
+  }
+
+  markAllAsRead() {
+    this.unreadCount = 0;
+    this.cdr.detectChanges();
   }
 }

@@ -1,4 +1,4 @@
-﻿using health_booking_api.Models;
+using health_booking_api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -161,6 +161,29 @@ namespace health_booking_api.Controllers
 
                 // Thêm vào DbSet và thực thi lưu xuống Database SQL Server/MySQL
                 _context.Appointments.Add(newAppointment);
+
+                var doctorSelected2 = await _context.Doctors.FindAsync(targetDoctorId ?? 1);
+                if (doctorSelected2 != null)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = doctorSelected2.UserId,
+                        Message = $"Bạn có một lịch khám mới chờ xác nhận từ bệnh nhân {finalPatientName} vào ngày {appointmentDateTime:dd/MM/yyyy HH:mm}.",
+                        CreatedAt = DateTime.Now,
+                        IsRead = false
+                    };
+                    _context.Notifications.Add(notification);
+                }
+
+                var patientNotification = new Notification
+                {
+                    UserId = model.UserId,
+                    Message = $"✅ Bạn đã đặt lịch khám với bác sĩ thành công vào lúc {appointmentDateTime:HH\\:mm} ngày {appointmentDateTime:dd/MM/yyyy}. Vui lòng chờ bác sĩ xác nhận.",
+                    CreatedAt = DateTime.Now,
+                    IsRead = false
+                };
+                _context.Notifications.Add(patientNotification);
+
                 await _context.SaveChangesAsync();
 
                 return Ok(new

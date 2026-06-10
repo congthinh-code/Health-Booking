@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core'; 
+import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef, HostListener } from '@angular/core'; 
 import { CommonModule, isPlatformBrowser } from '@angular/common';       
 import { RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth-service/auth.service';
@@ -52,6 +52,14 @@ export class Header implements OnInit {
         this.resetHeader();
       }
     });
+  }
+
+  @HostListener('window:notificationUpdated', ['$event'])
+  onNotificationUpdated(event: Event) {
+    const userId = localStorage.getItem('user_id') || sessionStorage.getItem('user_id');
+    if (userId) {
+      this.loadPhpStyleNotifications(Number(userId));
+    }
   }
 
   // Hàm gọi API lấy dữ liệu thông báo từ backend .NET
