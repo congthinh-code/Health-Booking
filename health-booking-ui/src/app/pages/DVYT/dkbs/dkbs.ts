@@ -80,7 +80,8 @@ export class Dkbs implements OnInit {
   }
 
   loadDoctors(): void {
-    this.http.get<Doctor[]>(`${API_BASE_URL}/api/doctors`).subscribe({
+    // this.http.get<Doctor[]>(`${API_BASE_URL}/api/doctors`).subscribe({
+    this.http.get<Doctor[]>(`https://localhost:7291/api/doctors`).subscribe({
       next: (data) => {
         this.doctors = data;
         this.loadError = '';

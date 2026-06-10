@@ -5,7 +5,8 @@ import { API_BASE_URL } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class DoctorService {
-  private baseUrl = `${API_BASE_URL}/api`;
+  // private baseUrl = `${API_BASE_URL}/api`;
+  private baseUrl = `https://localhost:7291/api`;
 
   constructor(private http: HttpClient) {}
 
