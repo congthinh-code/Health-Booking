@@ -54,8 +54,8 @@ export class Edit implements OnInit {
         });
         this.avatarPreviewUrl = doctor.avatar
           ? (doctor.avatar.includes('anhbs')
-              ? `/images/anhbacsi/${doctor.avatar}`
-              : `/images/userAvatar/${doctor.avatar}`)
+              ? `assets/images/anhbacsi/${doctor.avatar}`
+              : `assets/images/userAvatar/${doctor.avatar}`)
           : 'https://via.placeholder.com/150?text=Avatar';
       },
       error: (err) => console.error(err)
