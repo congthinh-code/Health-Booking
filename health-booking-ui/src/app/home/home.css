@@ -135,6 +135,12 @@ body {
     padding-right: 40px;       
 }
 
+/* Khoảng trống giả bên phải bằng độ rộng icon */
+.search-spacer {
+    width: 40px;
+    flex-shrink: 0;
+}
+
 .search-title {
     font-weight: 600;
     font-size: 15px;
@@ -160,11 +166,6 @@ body {
     color: #64748b !important;
     font-weight: 500;
     padding: 25px;
-}
-.search-price {
-    color: #d93ba2;
-    font-weight: 600;
-    font-size: 13px;
 }
 
 .search-type-label {
@@ -510,4 +511,49 @@ body {
     .specialties .grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Ép tất cả trạng thái link chưa bấm, đã bấm, hay đang nhấn đều giữ nguyên màu xanh */
+.specialties a.item,
+.specialties a.item:link,
+.specialties a.item:visited,
+.specialties a.item:active,
+.specialties a.item:hover {
+    background: rgba(255, 255, 255, 0.75);
+    /* Giữ nguyên độ mờ kính mờ sang xịn của bạn */
+    backdrop-filter: blur(12px); 
+    padding: 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform .3s ease;
+    display: flex;         
+    flex-direction: column;
+    align-items: center;
+    
+    /* Luôn luôn giữ chữ màu xanh đậm gốc của bạn */
+    color: #0000ff !important; 
+    
+    /* CHÍNH XÁC LÀ ĐÂY: Xóa bỏ hoàn toàn đường gạch chân quấy rối */
+    text-decoration: none !important; 
+}
+
+/* Khi rê chuột vào chỉ nhô lên nhẹ nhàng, tuyệt đối không hiện lại gạch chân */
+.specialties a.item:hover {
+    transform: translateY(-6px);
+    text-decoration: none !important;
+}
+
+/* Đảm bảo thẻ p (tên chuyên khoa) hiển thị chữ thuần túy, sạch sẽ */
+.specialties .item p {
+    color: #0000ff !important;
+    text-decoration: none !important; /* Chặn gạch chân lọt lưới */
+    margin: 0;
+    padding: 0;
+}
+
+/* Giữ nguyên phần cấu hình ảnh icon của bạn */
+.specialties img {
+    height: 55px;
+    margin-bottom: 10px;
 }

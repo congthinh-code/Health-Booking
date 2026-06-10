@@ -1,0 +1,22 @@
+<div class="tab-container">
+  <a routerLink="/pages/DVYT/dkbs" routerLinkActive="active" class="tab-item">Đặt khám bác sĩ</a>
+  <a routerLink="/pages/DVYT/dkck" routerLinkActive="active" class="tab-item">Đặt khám chuyên khoa</a>
+  <a routerLink="/pages/DVYT/dkcs" routerLinkActive="active" class="tab-item">Đặt khám cơ sở</a>
+  <a routerLink="/pages/DVYT/dkng" routerLinkActive="active" class="tab-item">Đặt khám ngoài giờ</a>
+  <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active" class="tab-item">Thanh toán viện phí</a>
+</div>
+
+<h1 class="title">Danh sách chuyên khoa</h1>
+
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
+<div class="department-grid">
+  @for (item of specializations; track item.name) {
+    <a [href]="getSearchUrl(item.name)" target="_blank" rel="noopener noreferrer" class="department-card">
+      <img [src]="getIconPath(item.name)" [alt]="item.name" (error)="onImgError($event)" />
+      <p>{{ item.name }}</p>
+    </a>
+  }
+</div>

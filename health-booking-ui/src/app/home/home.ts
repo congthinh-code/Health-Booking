@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FALLBACK_LOGO, specialtyIconPath } from '../core/utils/image.util';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject, of } from 'rxjs';
@@ -16,23 +17,31 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 export class Home implements OnInit {
 
   specialties = [
-    { label: 'Bác sĩ gia đình', fileName: 'Bác sĩ gia đình' },
-    { label: 'Da liễu', fileName: 'Da liễu' },
-    { label: 'Mắt', fileName: 'Mắt' },
-    { label: 'Ngoại cơ xương khớp', fileName: 'Ngoại cơ xương khớp' },
-    { label: 'Nội cơ xương khớp', fileName: 'Nội cơ xương khớp' },
-    { label: 'Nội hô hấp', fileName: 'Nội hô hấp' },
-    { label: 'Nội thần kinh', fileName: 'Nội thần kinh' },
-    { label: 'Nội tiết niệu', fileName: 'Nội tiết niệu' },
-    { label: 'Nội tiết', fileName: 'Nội tiết' },
-    { label: 'Nội tiêu hóa', fileName: 'Nội tiêu hoá' },
-    { label: 'Nội tim mạch', fileName: 'Nội tim mạch' },
-    { label: 'Nội tổng quát', fileName: 'Nội tổng quát' },
-    { label: 'Sản - Phụ khoa', fileName: 'Sản - phụ khoa' },
-    { label: 'Tai mũi họng', fileName: 'Tai mũi họng' },
-    { label: 'Tiêu hóa gan mật', fileName: 'Tiêu hoá gan mật' }
+    'Bác sĩ gia đình',
+    'Da liễu',
+    'Mắt',
+    'Ngoại cơ xương khớp',
+    'Nội cơ xương khớp',
+    'Nội hô hấp',
+    'Nội thần kinh',
+    'Nội tiết niệu',
+    'Nội tiết',
+    'Nội tiêu hoá',
+    'Nội tim mạch',
+    'Nội tổng quát',
+    'Sản - Phụ khoa',
+    'Tai mũi họng',
+    'Tiêu hoá gan mật'
   ];
-clickedInsideSearch: boolean = false;
+
+  getIconPath(name: string): string {
+    return specialtyIconPath(name);
+  }
+
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = FALLBACK_LOGO;
+  }
+
   searchQuery: string = '';
   searchResults: any[] = [];
   showSearchResults: boolean = false;
@@ -56,7 +65,7 @@ clickedInsideSearch: boolean = false;
     appointmentTime: ''
   };
 
-  constructor(private http: HttpClient, private eRef: ElementRef) {
+  constructor(private http: HttpClient, private eRef: ElementRef, private router: Router) {
     this.todayStr = new Date().toISOString().split('T')[0];
   }
 
@@ -65,7 +74,7 @@ clickedInsideSearch: boolean = false;
     this.initSearchDebounce();
   }
 
-  loadBookingFormData() {
+  loadBookingFormData(): void {
     this.http.get<any>('https://localhost:7291/api/CSYT/GetBookingFormData').subscribe({
       next: (res) => {
         this.hospitals = res.hospitals;
@@ -77,7 +86,7 @@ clickedInsideSearch: boolean = false;
 
   initSearchDebounce() {
     this.searchSubject.pipe(
-      debounceTime(0),
+      debounceTime(300),
       distinctUntilChanged(),
       switchMap(query => {
         if (query.trim().length === 0) {
@@ -107,39 +116,89 @@ clickedInsideSearch: boolean = false;
     this.searchSubject.next(this.searchQuery);
   }
 
+  navigateToSearchResult(item: any, event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    if (item.url) {
+      // Xóa ô tìm kiếm và ẩn dropdown
+      this.searchQuery = '';
+      this.showSearchResults = false;
+      
+      // Parse URL để tách path và query string
+      // URL từ API: /DVYT/ĐKBS?id=17
+      const urlParts = item.url.split('?');
+      const pathPart = urlParts[0]; // /DVYT/ĐKBS
+      const queryPart = urlParts[1]; // id=17
+      
+      // Decode path: /DVYT/ĐKBS -> pages/DVYT/dkbs
+      const normalizedPath = this.normalizeRoutePath(pathPart);
+      
+      // Parse query parameters
+      const queryParams: any = {};
+      if (queryPart) {
+        queryPart.split('&').forEach((param: string) => {
+          const [key, value] = param.split('=');
+          if (key && value) {
+            // Map API parameter names to component parameter names
+            let paramKey = key;
+            if (key === 'id' && normalizedPath.includes('dkbs')) {
+              paramKey = 'doctorId'; // API trả về 'id', nhưng component cần 'doctorId'
+            }
+            queryParams[paramKey] = decodeURIComponent(value);
+          }
+        });
+      }
+      
+      const queryString = Object.keys(queryParams).length > 0
+        ? `?${new URLSearchParams(queryParams).toString()}`
+        : '';
+      const internalUrl = `/${normalizedPath}${queryString}`;
 
+      console.log('Navigate to:', internalUrl);
+
+      // Navigate bằng URL hoàn chỉnh để tránh router tách sai segment
+      this.router.navigateByUrl(internalUrl);
+    }
+  }
+
+  // Normalize path: chuyển ký tự Tiếng Việt thành ASCII, thêm prefix pages/
+  private normalizeRoutePath(path: string): string {
+    // Xóa dấu / ở đầu
+    let normalized = path.startsWith('/') ? path.substring(1) : path;
+    
+    // Map các ký tự Tiếng Việt sang route path
+    const pathMap: { [key: string]: string } = {
+      'ĐKBS': 'dkbs',   // Đặt khám bác sĩ -> dkbs
+      'ĐKCK': 'dkck',   // Đặt khám chuyên khoa -> dkck
+      'ĐKCS': 'dkcs',   // Đặt khám tại cơ sở -> dkcs
+      'ĐKNG': 'dkng',   // Đặt khám ngoài -> dkng
+      'TTVP': 'ttvp'    // Tra tìm thông tin -> ttvp
+    };
+
+    // Replace từng ký tự Tiếng Việt bằng lowercase tương ứng
+    for (const [key, value] of Object.entries(pathMap)) {
+      normalized = normalized.replace(new RegExp(key, 'i'), value);
+    }
+    
+    // Thêm prefix 'pages/' nếu không có
+    if (!normalized.startsWith('pages/')) {
+      normalized = 'pages/' + normalized;
+    }
+    
+    return normalized;
+  }
 
   @HostListener('document:click', ['$event'])
   clickout(event: MouseEvent) {
-    // Nếu click hoàn toàn ra ngoài (không đi qua ô tìm kiếm) thì ẩn dropdown
-    if (!this.clickedInsideSearch) {
-      this.showSearchResults = false;
-    }
-    // Reset lại trạng thái để chuẩn bị cho lượt click tiếp theo
-    this.clickedInsideSearch = false;
-  }
-
-  // Hàm xử lý riêng khi người dùng click vào ô input tìm kiếm
-  onInputClick() {
-    this.clickedInsideSearch = true; // Đánh dấu click nội bộ
-    if (this.searchQuery.trim().length > 0) {
-      this.showSearchResults = true; // Hiện lại dropdown nếu đã có chữ
-    }
-  }
-
- selectSearchResult(item: any, event: Event) {
-    // Ngăn chặn hành động click mặc định của thẻ <a>
-    event.preventDefault();
-    
-    // Ẩn luôn dropdown và xóa chữ trong ô tìm kiếm sau khi chọn
     this.showSearchResults = false;
-    this.searchQuery = '';
+  }
 
-    // Chỉ xử lý nhảy vào form cho Bệnh viện hoặc Chuyên khoa
-    if (item.type === 'hospital') {
-      this.openBooking(item.id, undefined);
-    } else if (item.type === 'specialization' || item.type === 'specialty') {
-      this.openBooking(undefined, item.id);
+  // Hiện dropdown khi click vào ô tìm kiếm
+  onInputClick(event?: Event) {
+    event?.stopPropagation();
+    if (this.searchQuery.trim().length > 0) {
+      this.showSearchResults = true;
     }
   }
 

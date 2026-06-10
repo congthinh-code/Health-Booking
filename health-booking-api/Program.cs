@@ -10,14 +10,18 @@ builder.Services.AddDbContext<HealthBookingDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
-        policy => policy.WithOrigins("http://localhost:4200") // Port mặc định của Angular
-                        .AllowAnyMethod()                     // Cho phép GET, POST, PUT, DELETE...
-                        .AllowAnyHeader());                    // Cho phép các Header truyền lên
+        policy => policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 });
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -31,6 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

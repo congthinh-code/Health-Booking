@@ -1,0 +1,154 @@
+<div class="doctor-container">
+  <div class="doctor-sidebar">
+    <div class="doctor-profile-card">
+      <div class="profile-avatar">
+        <img [src]="doctor ? getAvatarUrl(doctor.avatar) : 'assets/images/default-avatar.png'" alt="Avatar Bác sĩ" />
+        <div class="avatar-badge" style="cursor: pointer;" (click)="avatarInput.click()">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+        <input #avatarInput type="file" hidden accept="image/*" (change)="onAvatarChange($event)" />
+      </div>
+      
+      <div class="profile-info">
+        <h3>{{ doctor?.fullName || 'Đang tải...' }}</h3>
+        
+        <p class="specialty" *ngIf="doctor?.specialization">
+          <i class="fa-solid fa-stethoscope"></i> {{ doctor.specialization?.name }}
+        </p>
+        <p class="experience" *ngIf="doctor?.hospital">
+          <i class="fa-solid fa-hospital"></i> {{ doctor.hospital?.name }}
+        </p>
+        <p class="schedule" *ngIf="doctor?.experienceYears">
+          <i class="fa-solid fa-briefcase"></i> {{ doctor.experienceYears }} năm kinh nghiệm
+        </p>
+      </div>
+
+      <div class="profile-actions" *ngIf="doctor && doctor.doctorId > 0">
+        <a [routerLink]="['/doctor/edit', doctor.doctorId]" class="btn-edit-profile">
+          Chỉnh sửa hồ sơ
+        </a>
+      </div>
+    </div>
+
+    <div class="quick-stats">
+      <h4>Thống kê</h4>
+      
+      <div class="stat-item">
+        <div class="stat-icon blue"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ total }}</span>
+          <span class="stat-label">Tổng lịch hẹn</span>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-icon yellow"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ pending }}</span>
+          <span class="stat-label">Chờ xác nhận</span>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-icon green"><i class="fa-solid fa-check-double"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ completed }}</span>
+          <span class="stat-label">Hoàn thành</span>
+        </div>
+      </div>
+      
+      <div class="stat-item">
+        <div class="stat-icon red"><i class="fa-solid fa-ban"></i></div>
+        <div class="stat-info">
+          <span class="stat-value">{{ cancelled }}</span>
+          <span class="stat-label">Đã hủy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doctor-main">
+    <div class="page-header">
+      <div>
+        <h1>Lịch hẹn của bác sĩ</h1>
+        <p class="page-subtitle">Quản lý các cuộc hẹn với bệnh nhân</p>
+      </div>
+    </div>
+
+    <div class="appointments-section">
+      <div class="section-header">
+        <h2><i class="fa-solid fa-calendar-days"></i> Danh sách lịch hẹn</h2>
+      </div>
+
+      <div class="empty-state" *ngIf="appointments.length === 0 && total === 0">
+        <i class="fa-solid fa-spinner fa-spin" style="color: #f08080;"></i>
+        <h3>Đang tải danh sách lịch khám...</h3>
+      </div>
+
+      <div class="empty-state" *ngIf="appointments.length === 0 && total > 0">
+        <i class="fa-regular fa-calendar-xmark"></i>
+        <h3>Chưa có lịch hẹn nào dành cho bạn.</h3>
+      </div>
+
+      <div class="appointments-grid" *ngIf="appointments.length > 0">
+        <div class="appointment-card" *ngFor="let item of appointments"
+             [ngClass]="{
+               'status-booked': item.status === 0 || item.status === 1,
+               'status-completed': item.status === 2,
+               'status-cancelled': item.status === 3
+             }">
+          <div class="appointment-header">
+            <div class="patient-info">
+              <div class="patient-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div>
+                <h4>{{ item.patient?.fullName }}</h4>
+              </div>
+            </div>
+            <span class="status-badge"
+                  [ngClass]="{
+                    'status-booked': item.status === 0 || item.status === 1,
+                    'status-completed': item.status === 2,
+                    'status-cancelled': item.status === 3
+                  }">
+              <span *ngIf="item.status === 0">Chờ xác nhận</span>
+              <span *ngIf="item.status === 1">Đã xác nhận</span>
+              <span *ngIf="item.status === 2">Hoàn thành</span>
+              <span *ngIf="item.status === 3">Đã hủy</span>
+            </span>
+          </div>
+
+          <div class="appointment-body">
+            <div class="appointment-datetime">
+              <div class="date-info">
+                <i class="fa-regular fa-calendar"></i>
+                <div>
+                  <strong>{{ item.appointmentDate | date:'dd/MM/yyyy' }}</strong>
+                  <small>Ngày khám</small>
+                </div>
+              </div>
+              <div class="time-info">
+                <i class="fa-regular fa-clock"></i>
+                <div>
+                  <strong>{{ item.appointmentDate | date:'HH:mm:ss' }}</strong>
+                  <small>Giờ khám</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="appointment-actions" *ngIf="item.status === 0">
+            <button class="btn-action btn-accept" (click)="confirmApp(item.appointmentId)">
+              <i class="fa-solid fa-check"></i> Chấp nhận
+            </button>
+            <button class="btn-action btn-cancel" (click)="rejectApp(item.appointmentId)">
+              <i class="fa-solid fa-xmark"></i> Hủy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

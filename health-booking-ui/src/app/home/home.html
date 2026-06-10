@@ -17,8 +17,8 @@
   @if (showSearchResults) {
     <div class="search-results">
       @if (searchResults.length > 0) {
-        @for (item of searchResults; track item.id) {
-          <a class="search-link" (click)="selectSearchResult(item, $event)" href="#">
+        @for (item of searchResults; track $index) {
+          <a class="search-link" href="javascript:void(0)" (click)="navigateToSearchResult(item, $event)">
             <div class="search-item">
               
               <!-- Khối chứa Icon nằm sát lề trái -->
@@ -60,7 +60,7 @@
     <button class="btn-book" (click)="openBooking()">
         ĐẶT LỊCH NGAY
     </button>
-  </div>
+</div>
 </section>
 
 @if(isModalOpen){
@@ -165,15 +165,21 @@
 <section class="services">
     <div class="container">
         <div class="cards">
+            <a routerLink="/pages/DVYT/dkcs">
                 <div class="card">
                     📅 <p>Đặt khám tại cơ sở</p>
                 </div>
+            </a>
+            <a routerLink="/pages/DVYT/dkck">
                 <div class="card">
                     💊 <p>Đặt khám chuyên khoa</p>
                 </div>
+            </a>
+            <a routerLink="/pages/DVYT/dkbs">
                 <div class="card">
                     👨‍⚕️ <p>Đặt khám theo bác sĩ</p>
                 </div>
+            </a>
         </div>
     </div>
 </section>
@@ -181,15 +187,18 @@
 <section class="specialties">
     <h2>CHUYÊN KHOA</h2>
     <div class="grid">
-        @for (item of specialties; track item.label) {
+        
+        @for (name of specialties; track name) {
             <a class="item" 
-               href="https://medpro.vn/tim-kiem?kw={{ item.label }}&tab=subject&page=1" 
+               href="https://medpro.vn/tim-kiem?kw={{ name }}&tab=subject&page=1" 
                target="_blank" 
                rel="noopener noreferrer">
-                <img [src]="'assets/images/iconchuyenkhoa/' + item.fileName + '.png'" 
-                     [alt]="item.label" 
-                     (error)="$any($event.target).src='assets/images/logo.png'">
-                <p>{{ item.label }}</p>
+               
+                <img [src]="getIconPath(name)" 
+                     [alt]="name" 
+                     (error)="onImgError($event)">
+                     
+                <p>{{ name }}</p>
             </a>
         }
     </div>

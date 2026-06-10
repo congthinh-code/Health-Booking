@@ -1,0 +1,92 @@
+<div class="tab-container">
+  <a routerLink="/pages/DVYT/dkbs" routerLinkActive="active" class="tab-item">Đặt khám bác sĩ</a>
+  <a routerLink="/pages/DVYT/dkck" routerLinkActive="active" class="tab-item">Đặt khám chuyên khoa</a>
+  <a routerLink="/pages/DVYT/dkcs" routerLinkActive="active" class="tab-item">Đặt khám cơ sở</a>
+  <a routerLink="/pages/DVYT/dkng" routerLinkActive="active" class="tab-item">Đặt khám ngoài giờ</a>
+  <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active" class="tab-item">Thanh toán viện phí</a>
+</div>
+
+<div class="banner">
+  <h1>THANH TOÁN VIỆN PHÍ</h1>
+</div>
+
+@if (loadError) {
+  <p class="load-error">{{ loadError }}</p>
+}
+
+<!-- Thanh tìm kiếm bệnh viện -->
+<div class="search-box">
+  <input type="text" placeholder="Tìm bệnh viện..." [(ngModel)]="searchTerm" (ngModelChange)="filterHospitals()" />
+</div>
+
+<!-- Danh sách bệnh viện hỗ trợ thanh toán -->
+<div class="benhvien-list">
+  @for (bv of filteredHospitals; track bv.hospitalId) {
+    <div class="benhvien-card">
+      <img [src]="getImgPath(bv.image)" [alt]="bv.name" (error)="onImgError($event)" class="benhvien-img" />
+      <div class="benhvien-info">
+        <h2>{{ bv.name }}</h2>
+        <p>{{ bv.address }}</p>
+        <div class="rating">
+          ⭐ 0 / 5
+        </div>
+        <div class="benhvien-btns">
+          <a [href]="bv.websiteUrl || '#'" target="_blank" class="xem">
+            <i class="fa-solid fa-clock-rotate-left"></i> Xem chi tiết
+          </a>
+          <button class="dat" (click)="openPaymentModal(bv.hospitalId, bv.name)">
+            <i class="fa-solid fa-credit-card"></i> Thanh toán viện phí
+          </button>
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <p style="grid-column: 1/-1; text-align: center; color: #4c24a8; margin-top: 25px; font-weight: 600;">
+      Không tìm thấy bệnh viện phù hợp với từ khóa của bạn.
+    </p>
+  }
+</div>
+
+<!-- Modal thanh toán viện phí -->
+@if (isModalOpen) {
+  <div id="paymentModal" class="modal show" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>Thanh toán Viện phí</h2>
+      <form (ngSubmit)="onPaymentSubmit()">
+        <div class="form-group">
+          <label>Bệnh viện thanh toán</label>
+          <input type="text" name="hospitalName" readonly [(ngModel)]="paymentData.hospitalName" />
+        </div>
+
+        <div class="form-group">
+          <label for="patientName">Họ và tên bệnh nhân</label>
+          <input type="text" name="patientName" required placeholder="Nhập tên bệnh nhân ghi trên phiếu" [(ngModel)]="paymentData.patientName" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="patientCode">Mã số bệnh nhân / Số hồ sơ</label>
+            <input type="text" name="patientCode" required placeholder="Ví dụ: BN12345" [(ngModel)]="paymentData.patientCode" />
+          </div>
+          <div class="form-group">
+            <label for="amount">Số tiền viện phí cần đóng (VNĐ)</label>
+            <input type="number" name="amount" required placeholder="Nhập số tiền" [(ngModel)]="paymentData.amount" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paymentMethod">Phương thức thanh toán</label>
+          <select name="paymentMethod" [(ngModel)]="paymentData.method" required>
+            <option value="" disabled selected>Chọn cổng thanh toán</option>
+            <option value="Momo">Ví điện tử MoMo</option>
+            <option value="VNPAY">Cổng thanh toán VNPAY</option>
+            <option value="Bank">Thẻ ATM nội địa / Internet Banking</option>
+          </select>
+        </div>
+
+        <button type="submit"><i class="fas fa-credit-card"></i> Xác nhận thanh toán</button>
+      </form>
+    </div>
+  </div>
+}

@@ -1,0 +1,22 @@
+<div class="verify-container">
+  <div class="verify-box">
+    <h2>Xác nhận mã xác thực đăng ký</h2>
+    <div *ngIf="message" [ngClass]="isError ? 'alert alert-danger' : 'alert alert-success'">{{ message }}</div>
+    <form (ngSubmit)="onVerify()">
+      <div class="input-group"><input type="email" [(ngModel)]="email" name="email" placeholder="Email đã đăng ký" required></div>
+      <div class="input-group"><input type="text" [(ngModel)]="verifyCode" name="verifyCode" placeholder="Nhập mã 6 số" required></div>
+      <div class="btn-group">
+        <button type="submit" class="btn-verify">Xác minh</button>
+        <button type="button" (click)="onResendCode()" class="btn-resend">Gửi lại mã</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="newCodeDisplay">
+  <div class="popup-box success-popup">
+    <h3>Mã xác minh mới</h3>
+    <p class="code-highlight"><b>{{ newCodeDisplay }}</b></p>
+    <button (click)="newCodeDisplay = ''" class="btn-close">Đóng</button>
+  </div>
+</div>

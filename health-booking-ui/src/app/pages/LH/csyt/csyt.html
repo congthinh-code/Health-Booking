@@ -346,53 +346,45 @@
 <!-- PARTNER LIST SECTION -->
 <section class="partners-section">
     <div class="partners-container">
-        <h2>CƠ SỞ Y TẾ ĐANG ĐỒNG HÀNH</h2>
+        <h2>DANH SÁCH CƠ SỞ Y TẾ</h2>
         <div class="hospitals-grid">
-            <!-- Cú pháp vòng lặp Angular mới trích xuất dữ liệu mảng dữ liệu ảo -->
-            @for (hospital of hospitals; track hospital.name) {
-                <div class="hospital-card">
+                <div class="hospital-card" *ngFor="let item of hospitals">
                     <div class="hospital-image">
-                        <img [src]="hospital.image" [alt]="hospital.name" />
+                        <img [src]="'assets/' + item.image" 
+                        [alt]="item.name" 
+                        (error)="$any($event.target).src='assets/images/logo.png'">
+                    </div>
+                    <div class="hospital-overlay">
+                        <a [href]="item.websiteUrl" target="_blank" class="overlay-btn">Xem Chi Tiết</a>
                     </div>
 
                     <div class="hospital-content">
-                        <h3>{{ hospital.name }}</h3>
-
+                        <h3>{{ item.name }}</h3>
+                    
                         <div class="hospital-address">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ hospital.address }}</span>
+                            <span>{{ item.address }}</span>
                         </div>
-               
-                        <div class="hospital-rating">
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <span class="rating-value">
-                                {{ hospital.rating }}
-                            </span>
-                        </div>  
                     </div>
                 </div>
-            }
         </div>
 
-        <!-- Phân trang mẫu tạm thời phục vụ giao diện -->
-        <div class="pagination">
-            <button class="pagination-btn" [disabled]="currentPage === 1" (click)="prevPage()">
-                <i class="fa-solid fa-angle-left"></i>
-            </button>
-            <div class="pagination-numbers">
-                @for (page of [1, 2, 3]; track page) {
-                    <button class="pagination-btn" [class.active]="currentPage === page" (click)="goToPage(page)">
-                        {{ page }}
-                    </button>
-                }
-            </div>
-            <button class="pagination-btn" [disabled]="currentPage === 3" (click)="nextPage()">
-                <i class="fa-solid fa-angle-right"></i>
-            </button>
-        </div>
+        <div class="pagination" *ngIf="totalPages > 1"> 
+                <button class="pagination-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+                <i class="fas fa-chevron-left"></i>
+                </button>
 
+                <button *ngFor="let p of [].constructor(totalPages); let i = index" 
+                        class="pagination-btn" 
+                        [class.active]="(i + 1) === currentPage" 
+                        (click)="changePage(i + 1)">
+                    {{ i + 1 }}
+                </button>
+
+                <button class="pagination-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+                <i class="fas fa-chevron-right"></i>
+                </button>
+        </div>
     </div>
 </section>
 
