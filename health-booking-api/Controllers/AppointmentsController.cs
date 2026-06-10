@@ -15,6 +15,55 @@ namespace health_booking_api.Controllers
             _context = context;
         }
 
+        // ==========================================
+        // 🔔 THÊM MỚI: API XÁC NHẬN LỊCH KHÁM (POST: api/Appointments/{id}/confirm)
+        // ==========================================
+        [HttpPost("{id}/confirm")]
+        public async Task<IActionResult> ConfirmAppointment(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound(new { success = false, message = "Không tìm thấy lịch hẹn!" });
+            }
+
+            // Cập nhật trạng thái thành Đã xác nhận (Thường tương đương với giá trị enum hoặc số 1)
+            appointment.Status = AppointmentStatus.Confirmed; // Hoặc bằng 1 tùy theo cách bạn định nghĩa Enum
+
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "Xác nhận lịch khám thành công!" });
+        }
+
+        // ==========================================
+        // 🔔 THÊM MỚI: API TỪ CHỐI / HỦY LỊCH KHÁM (POST: api/Appointments/{id}/reject)
+        // ==========================================
+        [HttpPost("{id}/reject")]
+        public async Task<IActionResult> RejectAppointment(int id, [FromBody] Dictionary<string, string> payload)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound(new { success = false, message = "Không tìm thấy lịch hẹn!" });
+            }
+
+            // Cập nhật trạng thái thành Đã hủy (Thường tương đương với giá trị enum hoặc số 3)
+            appointment.Status = AppointmentStatus.Cancelled; // Hoặc bằng 3 tùy theo cách bạn định nghĩa Enum
+
+            // Nếu bảng Appointment của bạn có cột lưu lý do hủy, bạn có thể bỏ comment dòng dưới để lưu:
+            // if (payload.ContainsKey("reason")) { appointment.CancelReason = payload["reason"]; }
+
+            _context.Appointments.Update(appointment);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "Đã từ chối và hủy lịch khám thành công!" });
+        }
+
+
+        // ==========================================
+        // ⚙️ API ĐẶT LỊCH KHÁM BỆNH NHÂN (GIỮ NGUYÊN CODE CŨ CỦA BẠN)
+        // ==========================================
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromForm] string? userId,
