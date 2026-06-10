@@ -19,7 +19,7 @@ export class Header implements OnInit {
   userRole = '';
   currentAvatar: string = 'assets/images/default-avatar.png';
 
-  // 🔔 KHAI BÁO CÁC BIẾN CHUÔNG THÔNG BÁO THEO KHUÔN PHP
+  // BIẾN CHUÔNG THÔNG BÁO
   isNotificationOpen = false; 
   unreadCount = 0;            
   notifications: any[] = [];  
@@ -41,7 +41,7 @@ export class Header implements OnInit {
         const role = localStorage.getItem('role') || sessionStorage.getItem('role') || ''; 
         this.userRole = role.toLowerCase().trim(); 
         
-        // Bốc UserId ra để đi lấy thông báo
+        // Lấy UserId để đi lấy thông báo
         const userId = localStorage.getItem('user_id') || sessionStorage.getItem('user_id');
         if (userId) {
           this.loadPhpStyleNotifications(Number(userId));
@@ -52,13 +52,10 @@ export class Header implements OnInit {
         this.resetHeader();
       }
     });
-
-    this.loadHeaderAvatar();
   }
 
-  // Hàm gọi API lấy dữ liệu theo phong cách PHP
+  // Hàm gọi API lấy dữ liệu thông báo từ backend .NET
   loadPhpStyleNotifications(userId: number) {
-    // 🔥 ĐẢM BẢO URL: /api/Notification/get-notifications/... (trùng khớp với C# ở trên)
     this.http.get<any>(`https://localhost:7291/api/Notification/get-notifications/${userId}`).subscribe({
       next: (res) => {
         if (res && res.success) {
@@ -73,15 +70,14 @@ export class Header implements OnInit {
 
   // Bấm chuông ẩn hiện dropdown
   toggleNotification() {
-    // 1. Đảo trạng thái Đóng/Mở của menu dropdown
     this.isNotificationOpen = !this.isNotificationOpen;
     
-    // 2. Nếu mở chuông ra và thấy đang có số thông báo mới (unreadCount > 0), ta xóa số đi
+    // Nếu mở chuông ra và thấy đang có số thông báo mới, ta tạm ẩn số đi trên UI
+    // Gợi ý: Nên gọi thêm 1 API cập nhật trạng thái "Đã đọc" ở DB tại đây nếu cần thiết
     if (this.isNotificationOpen && this.unreadCount > 0) {
       this.unreadCount = 0;
     }
     
-    // 3. Ép giao diện vẽ lại ngay lập tức
     this.cdr.detectChanges();
   }
 
@@ -95,36 +91,35 @@ export class Header implements OnInit {
     this.isNotificationOpen = false;
   }
 
+  // Hàm xử lý Avatar chuẩn hóa, an toàn khi chạy SSR
   loadHeaderAvatar() {
-    // 1. Lấy ảnh real-time nếu người dùng vừa mới thực hiện đổi avatar ở trang cá nhân
-    let avatarToDisplay = localStorage.getItem('userAvatar') || sessionStorage.getItem('userAvatar');
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    // 2. Nếu 'userAvatar' chưa có (lúc mới đăng nhập xong), bốc ngay cái key 'avatar' từ login.ts
-    if (!avatarToDisplay || avatarToDisplay === 'undefined' || avatarToDisplay === 'null' || avatarToDisplay === '') {
-      avatarToDisplay = localStorage.getItem('avatar') || sessionStorage.getItem('avatar');
-    }
+    // Ưu tiên lấy userAvatar (nếu mới cập nhật profile), sau đó đến avatar lúc login
+    let avatarToDisplay = localStorage.getItem('userAvatar') || 
+                          sessionStorage.getItem('userAvatar') || 
+                          localStorage.getItem('avatar') || 
+                          sessionStorage.getItem('avatar');
 
-    // 3. 🔥 ĐÃ SỬA LOGIC: Kiểm tra chuỗi sạch sẽ, loại bỏ hoàn toàn các trường hợp rỗng/null/undefined dạng chuỗi
     if (avatarToDisplay && 
         avatarToDisplay !== 'undefined' && 
         avatarToDisplay !== 'null' && 
         avatarToDisplay.trim() !== '') {
       
-      // Dự phòng kiểm tra nếu C# trả về đường dẫn tương đối dạng '/uploads/...' thì nối domain vào
+      // Nếu là đường dẫn tương đối từ C#, nối domain local vào
       if (avatarToDisplay.startsWith('/uploads')) {
         this.currentAvatar = `https://localhost:7291${avatarToDisplay}`;
       } else {
         this.currentAvatar = avatarToDisplay;
       }
-
-  loadHeaderAvatar() {
-    if (!isPlatformBrowser(this.platformId)) return;
-    let avatarToDisplay = localStorage.getItem('userAvatar') || localStorage.getItem('avatar') || sessionStorage.getItem('avatar');
-    if (avatarToDisplay && avatarToDisplay !== 'undefined' && avatarToDisplay !== 'null' && avatarToDisplay.trim() !== '') {
-      this.currentAvatar = avatarToDisplay.startsWith('/uploads') ? `https://localhost:7291${avatarToDisplay}` : avatarToDisplay;
     } else {
       this.currentAvatar = 'assets/images/default-avatar.png';
     }
+    
     this.cdr.detectChanges();
+  }
+  logout() {
+    this.authService.logout();
+    this.resetHeader();
   }
 }
