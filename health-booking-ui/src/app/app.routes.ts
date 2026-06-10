@@ -20,8 +20,8 @@ import { Dkbs } from './pages/DVYT/dkbs/dkbs';
 import { Dkng } from './pages/DVYT/dkng/dkng';
 import { Ttvp } from './pages/DVYT/ttvp/ttvp';
 import { JobDetail } from './pages/LH/job-detail/job-detail';
-import {Dashboard} from "./pages/doctor/dashboard/dashboard";
-import { Edit }      from './pages/doctor/edit/edit';
+import { Dashboard } from './features/doctor/dashboard/dashboard';
+import { Edit } from './features/doctor/edit/edit';
 
 
 export const routes: Routes = [
