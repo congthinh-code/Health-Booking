@@ -146,6 +146,7 @@ export class Header implements OnInit {
     this.cdr.detectChanges();
   }
   logout() {
+    localStorage.clear();
     this.authService.logout();
     this.resetHeader();
   }

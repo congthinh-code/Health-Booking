@@ -8,6 +8,8 @@ import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { Title } from '@angular/platform-browser';
+import { API_BASE_URL } from '../core/config/api.config';
+import { AuthService } from '../core/services/auth-service/auth.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -16,17 +18,28 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
+  isLoggedIn = false;
 
   constructor(
     private titleService: Title,
     private http: HttpClient,
     private eRef: ElementRef,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.todayStr = new Date().toISOString().split('T')[0];
   }
 
   ngOnInit(): void {
+    this.syncLoggedInState();
+    this.authService.isLoggedIn$.subscribe(status => {
+      if (status) {
+        this.isLoggedIn = true;
+        return;
+      }
+
+      this.syncLoggedInState();
+    });
     this.titleService.setTitle('HealthBookingUi'); 
     this.loadBookingFormData();
     this.initSearchDebounce();
@@ -82,13 +95,28 @@ export class Home implements OnInit {
   };
 
   loadBookingFormData(): void {
-    this.http.get<any>('https://localhost:7291/api/CSYT/GetBookingFormData').subscribe({
+    this.http.get<any>(`${API_BASE_URL}/api/CSYT/GetBookingFormData`).subscribe({
       next: (res) => {
         this.hospitals = res.hospitals;
         this.formSpecializations = res.specializations;
       },
       error: (err) => { console.error('Lỗi load dữ liệu form:', err); }
     });
+  }
+
+  private getStoredUserId(): number | null {
+    const storedUserId = localStorage.getItem('user_id') || sessionStorage.getItem('user_id');
+
+    if (!storedUserId) {
+      return null;
+    }
+
+    const parsedUserId = Number(storedUserId);
+    return Number.isFinite(parsedUserId) && parsedUserId > 0 ? parsedUserId : null;
+  }
+
+  private syncLoggedInState(): void {
+    this.isLoggedIn = this.getStoredUserId() !== null;
   }
 
   initSearchDebounce() {
@@ -172,27 +200,15 @@ export class Home implements OnInit {
     }
   }
 
-  openBooking(hospitalId?: number, specializationId?: number, doctorUserId?: number) {
+  openBooking() {
     // 1. TẠM ẨN KIỂM TRA ĐĂNG NHẬP ĐỂ BẠN THOẢI MÁI TEST FORM ĐẶT LỊCH KHÁM
-    
-    // const isLoggedIn = (window as any).isLoggedIn;
-    // if (!isLoggedIn) {
-    //   alert("Quý khách chưa đăng nhập tài khoản. Vui lòng đăng nhập để tiếp tục.");
-    //   window.location.href = '/Account/Login';
-    //   return;
-    // }
-    
-
+    if (!this.isLoggedIn) {
+      alert("Quý khách chưa đăng nhập tài khoản. Vui lòng đăng nhập để tiếp tục.");
+      window.location.href = '/login';
+      return;
+    }
     // 2. Mở Modal trực tiếp
     this.isModalOpen = true;
-
-    // 3. Tự động điền dữ liệu từ thanh tìm kiếm autocomplete vào form
-    if (hospitalId) {
-      this.bookingData.hospitalId = hospitalId.toString();
-    }
-    if (specializationId) {
-      this.bookingData.specializationId = specializationId.toString();
-    }
   }
 
   closeBooking() {
@@ -226,9 +242,28 @@ export class Home implements OnInit {
 
   submitBooking() {
     if (!this.validateDateTime()) return;
+
+    const userId = this.getStoredUserId();
+    if (!userId) {
+      alert('Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại trước khi đặt lịch.');
+      return;
+    }
+
     this.isSubmitting = true;
 
-    this.http.post<any>('https://localhost:7291/api/Booking/ProcessBooking', this.bookingData).subscribe({
+    const bookingPayload = {
+      ...this.bookingData,
+      userId,
+      patientName: this.bookingData.patientName?.trim(),
+      phone: this.bookingData.phone?.trim(),
+      hospitalId: this.bookingData.hospitalId,
+      specializationId: this.bookingData.specializationId,
+      doctorUserId: this.bookingData.doctorUserId,
+      appointmentDate: this.bookingData.appointmentDate,
+      appointmentTime: this.bookingData.appointmentTime,
+    };
+
+    this.http.post<any>(`${API_BASE_URL}/api/Booking/ProcessBooking`, bookingPayload).subscribe({
       next: (res) => {
         // Hiển thị nội dung thông báo trả về từ API C# (Thành công / Thất bại)
         alert(res.message); 
