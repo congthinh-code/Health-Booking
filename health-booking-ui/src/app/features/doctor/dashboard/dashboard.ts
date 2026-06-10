@@ -17,6 +17,7 @@ export class Dashboard implements OnInit {
   pending = 0;
   completed = 0;
   cancelled = 0;
+  isLoading = true; // dùng để phân biệt "đang tải" vs "không có lịch hẹn"
 
   constructor(private doctorService: DoctorService, private cdr: ChangeDetectorRef) {}
 
@@ -49,36 +50,37 @@ export class Dashboard implements OnInit {
         this.pending = data.pending;
         this.completed = data.completed;
         this.cancelled = data.cancelled;
-        this.cdr.detectChanges(); // Cập nhật view sau khi nhận dữ liệu từ API
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Lỗi load dashboard:', err)
+      error: (err) => {
+        console.error('Lỗi load dashboard:', err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
   getAvatarUrl(avatar: string): string {
-  // 1. Nếu dính chuỗi ma rác hoặc rỗng, trả về ảnh mặc định nằm ở assets
-  if (!avatar || avatar === 'undefined' || avatar === 'null' || avatar.trim() === '') {
-    return 'assets/images/anhbacsi/anhbs1.jpg'; // Thay bằng file ảnh có thật của bạn
+    // 1. Nếu rỗng hoặc chuỗi rác → ảnh mặc định
+    if (!avatar || avatar === 'undefined' || avatar === 'null' || avatar.trim() === '') {
+      return 'assets/images/anhbacsi/anhbs1.jpg';
+    }
+    // 2. Đã là link tuyệt đối hoặc assets/ → dùng ngay
+    if (avatar.startsWith('assets/') || avatar.startsWith('http://') || avatar.startsWith('https://')) {
+      return avatar;
+    }
+    // 3. Đường dẫn /uploads/... do backend C# trả về → ghép với base URL đúng (https:7291)
+    if (avatar.startsWith('/uploads')) {
+      return `https://localhost:7291${avatar}`;
+    }
+    // 4. Tên file ảnh bác sĩ tĩnh (anhbs1.jpg, ...)
+    if (avatar.includes('anhbs')) {
+      return `assets/images/anhbacsi/${avatar}`;
+    }
+    // Dự phòng
+    return `assets/images/userAvatar/${avatar}`;
   }
-
-  // 2. Nếu chuỗi đã chứa đường dẫn assets/ sẵn hoặc link http/https tuyệt đối từ C# thì trả về dùng luôn
-  if (avatar.startsWith('assets/') || avatar.startsWith('http://') || avatar.startsWith('https://')) {
-    return avatar;
-  }
-
-  // 3. Nếu là đường dẫn tương đối do database .NET trả về (ví dụ: /uploads/avatars/...)
-  if (avatar.startsWith('/uploads')) {
-    return `http://localhost:5213${avatar}`; // Khớp đúng cổng 5213 từ file DoctorsController.cs của bạn
-  }
-
-  // 4. 🌟 ĐÃ SỬA: Khớp đúng với cấu trúc thư mục public/assets/images/anhbacsi của bạn
-  if (avatar.includes('anhbs')) {
-    return `assets/images/anhbacsi/${avatar}`; 
-  }
-
-  // Dự phòng nếu có lưu key khác
-  return `assets/images/userAvatar/${avatar}`;
-}
 
   confirmApp(id: number) {
     if (confirm('Bạn có chắc chắn muốn xác nhận lịch hẹn này không?')) {
