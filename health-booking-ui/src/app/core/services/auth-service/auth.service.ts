@@ -9,7 +9,7 @@ import { API_BASE_URL } from '../../config/api.config';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${API_BASE_URL}/api/auth`; 
+  private apiUrl = `https://localhost:7291/api/auth`; 
   
   // 1. Cứ khởi tạo giá trị mặc định ban đầu là false
   private loggedInSubject = new BehaviorSubject<boolean>(false);

@@ -7,7 +7,6 @@
     </div>
 
     <div class="right-section">
-      
       <div class="top-bar">
         <div class="social">
           <a href="#"><i class="fab fa-tiktok"></i> Tiktok</a> |
@@ -18,78 +17,77 @@
 
         <div class="actions">
           <ng-container *ngIf="!isLoggedIn">
-    <a routerLink="/register" class="btn-outline">
-      <i class="fas fa-user"></i> Đăng ký
-    </a>
-    <a routerLink="/login" class="btn-outline">
-      <i class="fas fa-right-from-bracket"></i> Đăng nhập
-    </a>
-  </ng-container>
+            <a routerLink="/register" class="btn-outline">
+              <i class="fas fa-user"></i> Đăng ký
+            </a>
+            <a routerLink="/login" class="btn-outline">
+              <i class="fas fa-right-from-bracket"></i> Đăng nhập
+            </a>
+          </ng-container>
 
-  <ng-container *ngIf="isLoggedIn">
-    
-    <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 10px; margin-right: 15px;">
-      <img *ngIf="currentAvatar && currentAvatar !== 'assets/images/default-avatar.png'" 
-      [src]="currentAvatar" 
-      alt="Avatar" 
-      style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-      
-      <i *ngIf="!currentAvatar || currentAvatar === 'assets/images/default-avatar.png'"
-      class="fas fa-user-circle" 
-      style="font-size: 24px; color: #f4978e;"></i>
-      
-      <span class="user-name" style="font-weight: 500; color: #333;">
-        Xin chào, <b style="color: #f08080;">{{ userName }}</b>
-      </span>
-    </div>
+          <ng-container *ngIf="isLoggedIn">
+            <div class="user-profile-wrapper" style="display: flex; align-items: center; gap: 10px; margin-right: 15px;">
+              <img *ngIf="currentAvatar && currentAvatar !== 'assets/images/default-avatar.png'" 
+                   [src]="currentAvatar" 
+                   alt="Avatar" 
+                   style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+              
+              <i *ngIf="!currentAvatar || currentAvatar === 'assets/images/default-avatar.png'"
+                 class="fas fa-user-circle" 
+                 style="font-size: 24px; color: #f4978e;"></i>
+              
+              <span class="user-name" style="font-weight: 500; color: #333;">
+                Xin chào, <b style="color: #f08080;">{{ userName }}</b>
+              </span>
+            </div>
 
-    <div class="notification-dropdown" style="position: relative; display: inline-block;">
-    <button id="notification-btn" class="btn-notification" (click)="toggleNotification()">
-        <i class="fa-solid fa-bell"></i>
-        <span id="notification-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
-    </button>
+            <div class="notification-dropdown" style="position: relative; display: inline-block;">
+              <button id="notification-btn" class="btn-notification" (click)="toggleNotification()">
+                <i class="fa-solid fa-bell"></i>
+                <span id="notification-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+              </button>
 
-    <div id="notification-menu" class="notification-menu" 
-         [style.display]="isNotificationOpen ? 'block' : 'none'"
-         style="position: absolute; right: 0; top: 42px; width: 320px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 99999 !important;">
-        
-        <div class="notification-header" style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">
-            Thông báo mới nhận
-        </div>
+              <div id="notification-menu" class="notification-menu" 
+                   *ngIf="isNotificationOpen"
+                   style="position: absolute; right: 0; top: 42px; width: 320px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 99999 !important;">
+                  
+                  <div class="notification-header" style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; color: #333;">
+                      Thông báo mới nhận
+                  </div>
 
-        <div id="notification-list" style="max-height: 320px; overflow-y: auto;">
-            @for (noti of notifications; track noti.notifyId) {
-              <div class="notification-item" [style.background-color]="noti.isNew === 1 ? '#fff6f6' : 'transparent'" style="padding: 10px 15px; border-bottom: 1px solid #eee;">
-                  <p [style.font-weight]="noti.isNew === 1 ? '600' : 'normal'" style="margin: 0 0 5px 0; color: #333;">{{ noti.message }}</p>
-                  <small style="color: #999;">{{ noti.createdAt }}</small>
+                  <div id="notification-list" style="max-height: 320px; overflow-y: auto;">
+                      @for (noti of notifications; track noti.notifyId) {
+                        <div class="notification-item" [style.background-color]="noti.isNew === 1 ? '#fff6f6' : 'transparent'" style="padding: 10px 15px; border-bottom: 1px solid #eee;">
+                            <p [style.font-weight]="noti.isNew === 1 ? '600' : 'normal'" style="margin: 0 0 5px 0; color: #333;">{{ noti.message }}</p>
+                            <small style="color: #999;">{{ noti.createdAt }}</small>
+                        </div>
+                      }
+
+                      @if (notifications.length === 0) {
+                          <div style="padding: 25px; text-align: center; color: #bbb; font-size: 13px;">
+                              Không có thông báo nào dành cho bạn.
+                          </div>
+                      }
+                  </div>
               </div>
-            }
+            </div>
 
-            @if (notifications.length === 0) {
-                <div style="padding: 25px; text-align: center; color: #bbb; font-size: 13px;">
-                    Không có thông báo nào dành cho bạn.
-                </div>
-            }
-        </div>
-    </div>
-</div>
+            <a *ngIf="userRole === 'admin'" routerLink="/Admin" class="btn-outline" style="color: #e74c3c; font-weight: bold; border-color: #e74c3c; margin-right: 10px;">
+              <i class="fas fa-user-shield"></i> Quản lý trang
+            </a>
+            
+            <a *ngIf="userRole === 'doctor'" routerLink="/doctor/dashboard" class="btn-outline" style="color: #27ae60; font-weight: bold; border-color: #27ae60; margin-right: 10px;">
+              <i class="fas fa-user-md"></i> Trang bác sĩ
+            </a>
 
-    <a *ngIf="userRole === 'admin'" routerLink="/Admin" class="btn-outline" style="color: #e74c3c; font-weight: bold; border-color: #e74c3c; margin-right: 10px;">
-      <i class="fas fa-user-shield"></i> Quản lý trang
-    </a>
-    
-    <a *ngIf="userRole === 'doctor'" routerLink="/doctor/dashboard" class="btn-outline" style="color: #27ae60; font-weight: bold; border-color: #27ae60; margin-right: 10px;">
-      <i class="fas fa-user-md"></i> Trang bác sĩ
-    </a>
+            <a *ngIf="userRole === 'patient'" routerLink="/patient" class="btn-outline" style="color: #3498db; font-weight: bold; border-color: #3498db; margin-right: 10px;">
+              <i class="fas fa-user-injured"></i> Trang bệnh nhân
+            </a>
 
-    <a *ngIf="userRole === 'patient'" routerLink="/patient" class="btn-outline" style="color: #3498db; font-weight: bold; border-color: #3498db; margin-right: 10px;">
-      <i class="fas fa-user-injured"></i> Trang bệnh nhân
-    </a>
-
-    <a (click)="logout()" class="btn-outline" style="cursor: pointer;">
-      <i class="fas fa-sign-out-alt"></i> Đăng xuất
-    </a>
-  </ng-container>
+            <a (click)="logout()" class="btn-outline" style="cursor: pointer;">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
+          </ng-container>
 
           <div class="lang">
             <div class="lang-selected">
@@ -97,8 +95,8 @@
               <i class="fa-solid fa-caret-down"></i>
             </div>
             <div class="lang-menu">
-              <a href="#"><img src="https://flagcdn.com/w20/vn.png"> Tiếng Việt</a>
-              <a href="#"><img src="https://flagcdn.com/w20/us.png"> English</a>
+              <a href="#"><img src="https://flagcdn.com/w20/vn.png" alt="VN"> Tiếng Việt</a>
+              <a href="#"><img src="https://flagcdn.com/w20/us.png" alt="US"> English</a>
             </div>
           </div>
         </div>
@@ -115,10 +113,7 @@
 
         <nav>
           <div class="dropdown">
-            <a href="#">
-              Cơ sở y tế 
-              <i class="fas fa-caret-down"></i>
-            </a>
+            <a href="#">Cơ sở y tế <i class="fas fa-caret-down"></i></a>
             <div class="dropdown-menu">
               <a href="#">Bệnh viện công</a>
               <a href="#">Bệnh viện tư</a>
@@ -126,24 +121,18 @@
           </div>
 
           <div class="dropdown">
-            <a href="#">
-              Dịch vụ y tế 
-              <i class="fas fa-caret-down"></i>
-            </a>
-           <div class="dropdown-menu">
-            <a routerLink="/pages/DVYT/dkbs" routerLinkActive="active">Đặt khám theo bác sĩ</a>
-            <a routerLink="/pages/DVYT/dkck" routerLinkActive="active">Đặt khám chuyên khoa</a>
-            <a routerLink="/pages/DVYT/dkcs" routerLinkActive="active">Đặt khám tại cơ sở</a>
-            <a routerLink="/pages/DVYT/dkng" routerLinkActive="active">Đặt khám ngoài giờ</a>
-            <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active">Thanh toán viện phí</a>
+            <a href="#">Dịch vụ y tế <i class="fas fa-caret-down"></i></a>
+            <div class="dropdown-menu">
+              <a routerLink="/pages/DVYT/dkbs" routerLinkActive="active">Đặt khám theo bác sĩ</a>
+              <a routerLink="/pages/DVYT/dkck" routerLinkActive="active">Đặt khám chuyên khoa</a>
+              <a routerLink="/pages/DVYT/dkcs" routerLinkActive="active">Đặt khám tại cơ sở</a>
+              <a routerLink="/pages/DVYT/dkng" routerLinkActive="active">Đặt khám ngoài giờ</a>
+              <a routerLink="/pages/DVYT/ttvp" routerLinkActive="active">Thanh toán viện phí</a>
             </div>
           </div>
 
           <div class="dropdown">
-            <a href="#">
-              Hướng dẫn 
-              <i class="fas fa-caret-down"></i>
-            </a>
+            <a href="#">Hướng dẫn <i class="fas fa-caret-down"></i></a>
             <div class="dropdown-menu">
               <a routerLink="/pages/cdud" routerLinkActive="active">Cài đặt ứng dụng</a>
               <a routerLink="/pages/qthp" routerLinkActive="active">Quy trình hoàn phí</a>
@@ -153,9 +142,7 @@
           </div>
 
           <div class="dropdown">
-            <a href="#">
-              Liên hệ hợp tác <i class="fas fa-caret-down"></i>
-            </a>
+            <a href="#">Liên hệ hợp tác <i class="fas fa-caret-down"></i></a>
             <div class="dropdown-menu">
               <a routerLink="/pages/csyt" routerLinkActive="active">Cơ sở y tế</a>
               <a routerLink="/pages/qc" routerLinkActive="active">Quảng cáo</a>
@@ -169,30 +156,8 @@
 
   <div class="notice">
     <div class="marquee">
-      <span>
-        <i class="fas fa-bullhorn"></i>
-         Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh
-        </span>
-      <span>
-        <i class="fas fa-bullhorn"></i> 
-        Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh
-      </span>
-      <span>
-        <i class="fas fa-bullhorn"></i> 
-        Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh
-      </span>
-      <span>
-        <i class="fas fa-bullhorn"></i> 
-        Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh
-      </span>
-      <span>
-        <i class="fas fa-bullhorn"></i> 
-        Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh
-      </span>
-      <span>
-        <i class="fas fa-bullhorn"></i> 
-        Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh
-      </span>
+      <span><i class="fas fa-bullhorn"></i> Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh</span>
+      <span><i class="fas fa-bullhorn"></i> Đặt ngay Trợ Lý Giúp Việc để người thân luôn được chăm sóc khi đi khám bệnh</span>
     </div>
   </div>
 </header>
