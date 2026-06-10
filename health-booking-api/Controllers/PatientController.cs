@@ -195,5 +195,80 @@ namespace health_booking_api.Controllers
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
+
+        // ================= 4. API GET: LẤY LỊCH HẸN VÀ THỐNG KÊ (DASHBOARD DATA) =================
+        [HttpGet("dashboard-data/{userId}")]
+        public async Task<IActionResult> GetDashboardData(int userId)
+        {
+            try
+            {
+                // 1. Từ UserId truyền từ Angular, tra ra PatientId dưới Database
+                var patient = await _context.Patients.FirstOrDefaultAsync(p => p.UserId == userId);
+                if (patient == null)
+                {
+                    return NotFound(new { success = false, message = "Không tìm thấy thông tin bệnh nhân!" });
+                }
+
+                // 2. Lấy nguồn 1: Lịch hẹn trực tiếp với Bác sĩ (BookingSource == "Doctor")
+                var appointmentsRaw = await _context.Appointments
+                    .Include(a => a.Doctor)
+                    .Where(a => a.PatientId == patient.PatientId && a.BookingSource == "Doctor")
+                    .OrderByDescending(a => a.AppointmentDate)
+                    .ToListAsync();
+
+                // Biến đổi cấu trúc mảng để ép kiểu Enum Status về dạng số nguyên (0,1,2,3) cho Angular nhận diện chuẩn class CSS
+                var appointments = appointmentsRaw.Select(a => new
+                {
+                    appointmentId = a.AppointmentId,
+                    appointmentDate = a.AppointmentDate,
+                    status = (int)a.Status, // Ép kiểu Enum về số (0: Pending, 1: Confirmed, 2: Completed, 3: Cancelled)
+                    doctor = a.Doctor != null ? new { fullName = a.Doctor.FullName } : null
+                }).ToList();
+
+                // 3. Lấy nguồn 2: Lịch khám đặt qua form tại Cơ sở/Chuyên khoa (BookingSource == "Home")
+                var bookingRequestsRaw = await _context.Appointments
+                    .Include(a => a.Hospital)
+                    .Include(a => a.Specialization)
+                    .Where(a => a.PatientId == patient.PatientId && a.BookingSource == "Home")
+                    .OrderByDescending(a => a.AppointmentDate)
+                    .ToListAsync();
+
+                // 🔥 ĐỒNG BỘ TÊN THUỘC TÍNH: Đổi HospitalName và SpecializationName thành ".name" để khớp khít với file Angular HTML của bạn
+                var bookingRequests = bookingRequestsRaw.Select(b => new
+                {
+                    appointmentId = b.AppointmentId,
+                    appointmentDate = b.AppointmentDate,
+                    status = (int)b.Status,
+                    hospital = b.Hospital != null ? new { name = b.Hospital.Name } : null, // Biến đổi thành .name giống Angular gọi
+                    specialization = b.Specialization != null ? new { name = b.Specialization.Name } : null // Biến đổi thành .name giống Angular gọi
+                }).ToList();
+
+                // 4. Tính toán Thống kê nhanh (Stats) dựa trên tất cả lịch hẹn của Bệnh nhân này
+                var allPatientAppointments = await _context.Appointments
+                    .Where(a => a.PatientId == patient.PatientId)
+                    .ToListAsync();
+
+                var stats = new
+                {
+                    total = allPatientAppointments.Count,
+                    pending = allPatientAppointments.Count(a => (int)a.Status == 0),
+                    completed = allPatientAppointments.Count(a => (int)a.Status == 2 || (int)a.Status == 1), // Tính cả Đã xác nhận/Hoàn thành theo logic cũ của bạn
+                    cancelled = allPatientAppointments.Count(a => (int)a.Status == 3)
+                };
+
+                // 5. Trả dữ liệu JSON hoàn chỉnh về cho Frontend Angular hốt
+                return Ok(new
+                {
+                    success = true,
+                    appointments = appointments,
+                    bookingRequests = bookingRequests,
+                    stats = stats
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Lỗi xử lý hệ thống: " + ex.Message });
+            }
+        }
     }
 }
