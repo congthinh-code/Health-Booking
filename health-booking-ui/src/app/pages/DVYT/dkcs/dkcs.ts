@@ -66,7 +66,8 @@ export class Dkcs implements OnInit {
   }
 
   loadHospitals(): void {
-    this.http.get<Hospital[]>(`${API_BASE_URL}/api/hospitals`).subscribe({
+    // this.http.get<Hospital[]>(`${API_BASE_URL}/api/hospitals`).subscribe({
+    this.http.get<Hospital[]>(`https://localhost:7291/api/hospitals`).subscribe({
       next: (data) => {
         this.hospitals = data.map(h => ({
           ...h,
