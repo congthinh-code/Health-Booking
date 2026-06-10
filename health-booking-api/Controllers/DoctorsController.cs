@@ -146,8 +146,8 @@ public async Task<IActionResult> UploadAvatar(int id, IFormFile avatarFile)
         _context.Doctors.Update(doctor);
         await _context.SaveChangesAsync();
 
-        // Hardcode domain base on API_BASE_URL (5213). Adjust if needed.
-        var fullAvatarUrl = $"http://localhost:5213{doctor.Avatar}";
+        // Trả về đường dẫn đầy đủ với đúng protocol và port của backend (https:7291)
+        var fullAvatarUrl = $"https://localhost:7291{doctor.Avatar}";
 
         return Ok(new
         {

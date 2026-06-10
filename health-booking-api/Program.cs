@@ -10,7 +10,12 @@ builder.Services.AddDbContext<HealthBookingDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
-        policy => policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
+        policy => policy.WithOrigins(
+                            "http://localhost:4200",
+                            "http://localhost:4201",
+                            "https://localhost:4200",
+                            "https://localhost:4201",
+                            "https://localhost:7291")
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
