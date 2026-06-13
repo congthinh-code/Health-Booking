@@ -26,6 +26,10 @@ import { Edit } from './features/doctor/edit/edit';
 
 import { Bvcong } from './pages/CSYT/bvcong/bvcong';
 import { Bvtu } from './pages/CSYT/bvtu/bvtu';
+import { GioiThieuComponent } from './pages/VTC/gioi-thieu/gioi-thieu';
+import { DieuKhoanComponent } from './pages/VTC/dieu-khoan/dieu-khoan';
+import { BaoMatComponent } from './pages/VTC/bao-mat/bao-mat';
+import { QuyDinhComponent } from './pages/VTC/quy-dinh/quy-dinh';
 export const routes: Routes = [
   {
     path: '', component: Home
@@ -101,4 +105,16 @@ export const routes: Routes = [
   },
   { path: 'doctor/dashboard', component: Dashboard },
   { path: 'doctor/edit/:id',  component: Edit },
+  {
+    path: 'pages/VTC/gioi-thieu', component: GioiThieuComponent
+  },
+  {
+    path: 'pages/VTC/dieu-khoan', component: DieuKhoanComponent
+  },
+  {
+    path: 'pages/VTC/bao-mat', component: BaoMatComponent
+  },
+  {
+    path: 'pages/VTC/quy-dinh', component: QuyDinhComponent
+  }
 ];

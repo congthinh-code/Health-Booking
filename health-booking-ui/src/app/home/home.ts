@@ -22,8 +22,6 @@ export class Home implements OnInit {
   constructor(
     private titleService: Title,
     private http: HttpClient,
-    private eRef: ElementRef,
-    private router: Router,
     private authService: AuthService
   ) {
     this.todayStr = new Date().toISOString().split('T')[0];
@@ -143,42 +141,6 @@ export class Home implements OnInit {
         }
       });
     }, 250);
-  }
-
-  navigateToSearchResult(item: any, event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    const internalUrl = this.getSearchResultUrl(item);
-    if (!internalUrl) {
-      return;
-    }
-
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.showSearchResults = false;
-
-    this.router.navigateByUrl(internalUrl);
-  }
-
-  private getSearchResultUrl(item: any): string | null {
-    const id = item?.id;
-
-    if (id == null) {
-      return null;
-    }
-
-    switch (item?.type) {
-      case 'doctor':
-        return `/pages/DVYT/dkbs?doctorId=${encodeURIComponent(id)}`;
-      case 'hospital':
-        return `/pages/DVYT/dkcs?hospitalId=${encodeURIComponent(id)}`;
-      case 'specialization':
-      case 'specialty':
-        return `/pages/DVYT/dkck?specializationId=${encodeURIComponent(id)}`;
-      default:
-        return null;
-    }
   }
 
   @HostListener('document:click', ['$event'])

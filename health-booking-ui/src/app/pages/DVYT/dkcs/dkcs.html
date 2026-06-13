@@ -12,9 +12,40 @@
   <p class="load-error">{{ loadError }}</p>
 }
 
-<div class="search-box">
+<!-- <div class="search-box">
   <input type="text" placeholder="Tìm bệnh viện, phòng khám..." [(ngModel)]="searchTerm" (ngModelChange)="filterHospitals()" />
-</div>
+</div> -->
+
+@if (selectedHospital) {
+  <div style="width: 90%; max-width: 1300px; margin: 0 auto 40px;">
+    <div style="background: #fff; border-radius: 18px; padding: 30px; display: flex; gap: 30px; box-shadow: 0 6px 16px rgba(214, 51, 132, 0.12); border: 2px solid #efb4d7; flex-wrap: wrap; transition: 0.3s;">
+      
+      <div style="flex: 1; min-width: 280px; max-width: 400px; height: 240px; overflow: hidden; border-radius: 14px;">
+        <img [src]="getLogoPath(selectedHospital.image)" [alt]="selectedHospital.name" (error)="onImgError($event)" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+      </div>
+
+      <div style="flex: 2; min-width: 300px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h2 style="color: #d93ba2; font-size: 24px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            {{ selectedHospital.name }}
+            <!-- @if (selectedHospital.isVerified) {
+              <span style="color: #28a745; font-size: 14px; font-weight: 500;">✓ Verified</span>
+            } -->
+          </h2>
+          <p style="margin-bottom: 10px; color: #666; font-size: 14px; line-height: 1.5;"><b>Địa chỉ:</b> {{ selectedHospital.address }}</p>
+          <p style="margin-bottom: 10px; color: #4c24a8; font-size: 14px; line-height: 1.6;"><b>Giới thiệu:</b> {{ selectedHospital.description || 'Hệ thống cơ sở y tế uy tín, trang thiết bị hiện đại hàng đầu khu vực, phục vụ khám chữa bệnh chất lượng cao.' }}</p>
+          <p style="margin-bottom: 15px; color: #f5b301; font-size: 15px;"><b>Đánh giá:</b> ⭐ {{ selectedHospital.rating }} ({{ selectedHospital.reviewCount }} lượt phản hồi)</p>
+        </div>
+
+        <div class="card-actions" style="margin-top: auto;">
+          <a [href]="selectedHospital.websiteUrl || '#'" target="_blank" class="btn outline">Xem chi tiết</a>
+          <button class="btn primary" (click)="openBookingModal(selectedHospital.hospitalId, selectedHospital.name)">Đặt khám</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}
 
 <div class="grid">
   @for (hospital of paginatedHospitals; track hospital.hospitalId) {
@@ -25,9 +56,9 @@
       <div class="card-right">
         <h3 class="title">
           {{ hospital.name }}
-          @if (hospital.isVerified) {
-            <span class="verified">✓ Verified</span>
-          }
+          <!-- @if (hospital.isVerified) {
+            <span class="verified">✓ Verified</span> -->
+          <!-- } -->
         </h3>
         <p class="address">{{ hospital.address }}</p>
         <div class="rating">⭐ {{ hospital.rating }} ({{ hospital.reviewCount }})</div>

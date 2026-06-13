@@ -1,0 +1,473 @@
+/* ===================================================
+   BASE COLORS & ROOT VARIABLES
+   =================================================== */
+:root {
+    --color-primary: #d93ba2; /* Hồng tím chủ đạo */
+    --color-secondary: #4c24a8; /* Tím đậm */
+    --color-background: #fef6e4; /* Vàng kem nhạt */
+    --color-light-blue: #f9e2e7; /* Hồng pastel */
+    --color-highlight: #f3c8de; /* Viền nhấn pastel */
+    --color-gradient: linear-gradient(180deg, #fef6e4 0%, #f9e2e7 100%);
+}
+
+/* ===================================================
+   GLOBAL RESET
+   =================================================== */
+.page-gioithieu {
+    background-color: #fff0f5; /* Màu hồng nền gốc của bạn (bạn có thể thay mã màu chính xác nếu cần) */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.page-gioithieu a,
+.page-gioithieu a:link,
+.page-gioithieu a:visited,
+.page-gioithieu a:hover,
+.page-gioithieu a:active,
+.page-gioithieu a:focus {
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.page-gioithieu .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* ===================================================
+   HERO BANNER (Hình 1)
+   =================================================== */
+.hero-banner {
+    text-align: center;
+    padding: 100px 100px;
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom: 5px solid var(--color-highlight);
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(217, 59, 162, 0.15);
+}
+
+    .hero-banner h2 {
+        color: var(--color-primary);
+        font-size: 2.8em;
+        margin-top: 0;
+    }
+
+.app-screenshot-left img {
+    width: 280px;
+    margin-top: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+
+/* ===================================================
+   GIỚI THIỆU PKH + TÍNH NĂNG (Hình 5)
+   =================================================== */
+.section-intro-pkh {
+    padding: 60px 0;
+}
+
+.feature-cards {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+    .feature-cards p {
+        color: var(--color-secondary);
+        margin: 0;
+    }
+
+.layout-grid-2 {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.card-feature {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid var(--color-primary);
+    box-shadow: 0 6px 18px rgba(76, 36, 168, 0.08);
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+    .card-feature span {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: var(--color-secondary);
+        background-color: var(--color-light-blue);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+
+.image-doctors img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* ===================================================
+   TẦM NHÌN & SỨ MỆNH (Hình 2)
+   =================================================== */
+.section-mission-vision {
+    background: var(--color-gradient);
+    padding: 50px 0;
+    border-top: 1px solid var(--color-highlight);
+}
+
+.section-philosophy {
+    padding: 40px 0 10px;
+    text-align: center;
+}
+
+    .section-philosophy h2 {
+        color: var(--color-primary);
+        font-size: 2rem;
+    }
+
+.flex-space-between {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.vision-box, .mission-box {
+    padding: 30px;
+    border-radius: 15px;
+    flex-basis: 48%;
+    border: 1px solid var(--color-highlight);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 8px 20px rgba(217, 59, 162, 0.1);
+}
+
+    .vision-box h2, .mission-box h2 {
+        color: var(--color-primary);
+        text-align: center;
+        border-bottom: 2px solid var(--color-secondary);
+        padding-bottom: 10px;
+    }
+
+/* ===================================================
+   CÁC BỆNH VIỆN TIÊU BIỂU (Hình 4)
+   =================================================== */
+.section-partners {
+    text-align: center;
+    padding: 50px 0;
+}
+
+    .section-partners h2 {
+        color: var(--color-primary);
+    }
+
+.hospitals-carousel {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.hospital-logo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: contain;
+    padding: 5px;
+    border: 3px solid #fff;
+    box-shadow: 0 10px 25px rgba(166, 193, 238, 0.35);
+    background-color: white;
+}
+
+.pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.page-number,
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--color-highlight);
+    color: var(--color-secondary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+    .page-number:hover,
+    .page-btn:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .page-number.active {
+        background: var(--color-primary);
+        color: #fff;
+        border-color: var(--color-primary);
+        box-shadow: 0 6px 20px rgba(217,59,162,0.25);
+    }
+
+/* ===================================================
+   EXTENDED UI ADDITIONAL COMPONENTS
+   =================================================== */
+
+/* BUTTON */
+.page-gioithieu .btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.25s;
+    border: none;
+    font-weight: 600;
+}
+
+.page-gioithieu .btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 5px 20px rgba(217, 59, 162, 0.25);
+}
+
+    .page-gioithieu .btn-primary:hover {
+        background: #c4308e;
+        transform: translateY(-3px);
+    }
+
+.page-gioithieu .btn-secondary {
+    background: var(--color-secondary);
+    color: white;
+    box-shadow: 0 5px 20px rgba(76, 36, 168, 0.25);
+}
+
+    .page-gioithieu .btn-secondary:hover {
+        background: #3b1c82;
+        transform: translateY(-3px);
+    }
+
+/* BADGE */
+.page-gioithieu .badge {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    font-weight: bold;
+    background: var(--color-light-blue);
+    color: var(--color-secondary);
+}
+
+/* SECTION TITLE */
+.page-gioithieu .section-title-line {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+    .page-gioithieu .section-title-line::after {
+        content: "";
+        width: 80px;
+        height: 4px;
+        background: var(--color-secondary);
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 10px;
+    }
+
+/* HOSPITAL CARD STYLE */
+.page-gioithieu .hospital-card {
+    width: 240px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(217, 59, 162, 0.12);
+    border: 2px solid var(--color-highlight);
+    transition: 0.25s ease;
+}
+
+    .page-gioithieu .hospital-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 35px rgba(217, 59, 162, 0.25);
+    }
+
+    .page-gioithieu .hospital-card img {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: contain;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(166, 193, 238, 0.4);
+        margin-bottom: 10px;
+    }
+
+    .page-gioithieu .hospital-card h4 {
+        font-size: 1.1rem;
+        color: var(--color-secondary);
+        margin-top: 10px;
+    }
+
+/* LIST WITH ICON */
+.page-gioithieu .icon-list {
+    list-style: none;
+    padding: 0;
+}
+
+    .page-gioithieu .icon-list li {
+        margin-bottom: 12px;
+        font-size: 1.05rem;
+        color: var(--color-secondary);
+        display: flex;
+        align-items: center;
+    }
+
+        .page-gioithieu .icon-list li::before {
+            content: "✔";
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+/* IMAGE + CONTENT SIDE-BY-SIDE */
+.page-gioithieu .layout-side {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+    .page-gioithieu .layout-side img {
+        width: 100%;
+        max-width: 480px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(76, 36, 168, 0.1);
+    }
+
+/* CONTENT BOX */
+.page-gioithieu .content-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 18px;
+    border-left: 6px solid var(--color-primary);
+    box-shadow: 0 10px 25px rgba(76, 36, 168, 0.08);
+}
+
+/* FORM */
+.page-gioithieu .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid var(--color-highlight);
+    margin-bottom: 18px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.25s;
+    background: #fff;
+}
+
+    .page-gioithieu .form-control:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 8px rgba(217, 59, 162, 0.3);
+    }
+
+/* CTA BOX */
+.page-gioithieu .cta-box {
+    padding: 40px;
+    text-align: center;
+    background: var(--color-gradient);
+    border-radius: 18px;
+    border: 2px solid var(--color-highlight);
+    box-shadow: 0 10px 28px rgba(217, 59, 162, 0.1);
+}
+
+    .page-gioithieu .cta-box h2 {
+        font-size: 2rem;
+        color: var(--color-primary);
+    }
+
+    .page-gioithieu .cta-box p {
+        color: var(--color-secondary);
+        font-size: 1.1rem;
+        margin: 10px 0 20px;
+    }
+
+/* ANIMATION FADE UP */
+.page-gioithieu .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease forwards;
+}
+
+.section-philosophy {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.intro-healthmeet {
+    width: 800px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 30px auto;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+@media (max-width: 768px) {
+    .layout-grid-2,
+    .flex-space-between {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .hero-banner h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 850px) {
+    .layout-side {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hospital-card {
+        width: 100%;
+        max-width: 300px;
+        margin: auto;
+    }
+
+    .cta-box {
+        padding: 25px;
+    }
+}

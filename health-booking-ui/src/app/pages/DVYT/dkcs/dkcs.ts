@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+// Thêm ActivatedRoute vào dòng import dưới đây
+import { Router, ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../../core/config/api.config';
 import { FALLBACK_LOGO, hospitalImagePath } from '../../../core/utils/image.util';
@@ -29,6 +30,8 @@ export interface Hospital {
 export class Dkcs implements OnInit {
   hospitals: Hospital[] = [];
   filteredHospitals: Hospital[] = [];
+  // Thêm biến hứng cơ sở y tế được chọn
+  selectedHospital: Hospital | null = null; 
   searchTerm = '';
   loadError = '';
 
@@ -43,6 +46,7 @@ export class Dkcs implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute, // Khai báo ActivatedRoute ở đây
     private http: HttpClient,
     private cdr: ChangeDetectorRef
   ) {}
@@ -71,11 +75,15 @@ export class Dkcs implements OnInit {
         this.hospitals = data.map(h => ({
           ...h,
           rating: h.rating ?? 0,
-          reviewCount: 0,
+          reviewCount: h.reviewCount ?? 0, // Giữ nguyên đếm review thực tế nếu có
           isVerified: h.hospitalId <= 3
         }));
         this.loadError = '';
         this.filterHospitals();
+        
+        // Kích hoạt tìm kiếm cơ sở y tế từ URL ngay sau khi danh sách được tải xong
+        this.setSelectedHospitalFromQuery(); 
+        
         this.cdr.markForCheck();
       },
       error: () => {
@@ -87,12 +95,24 @@ export class Dkcs implements OnInit {
     });
   }
 
+  // Hàm lắng nghe Query Parameters từ URL để bốc cơ sở lên đầu trang
+  setSelectedHospitalFromQuery(): void {
+    this.route.queryParams.subscribe(params => {
+      const hospitalId = +params['hospitalId'];
+      if (hospitalId) {
+        this.selectedHospital = this.hospitals.find(h => h.hospitalId === hospitalId) || null;
+      } else {
+        this.selectedHospital = null;
+      }
+    });
+  }
+
   filterHospitals(): void {
     if (!this.searchTerm.trim()) {
       this.filteredHospitals = [...this.hospitals];
     } else {
       const searchLower = this.searchTerm.toLowerCase();
-      this.filteredHospitals = this.hospitals.filter(h =>
+      box: this.filteredHospitals = this.hospitals.filter(h =>
         h.name.toLowerCase().includes(searchLower) ||
         h.address.toLowerCase().includes(searchLower)
       );

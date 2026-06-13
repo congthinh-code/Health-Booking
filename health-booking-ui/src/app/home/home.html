@@ -5,51 +5,47 @@
 
   <div class="hero-content">
     <h1>Đặt lịch khám nhanh chóng</h1>
-    
-<div class="search-container">
- <input 
-  type="text" 
-  class="search" 
-  placeholder="Tìm kiếm bác sĩ, chuyên khoa, bệnh viện..."
-  [(ngModel)]="searchQuery" 
-  (input)="onSearchInput()"
-  (click)="onInputClick()">
-  @if (showSearchResults) {
-    <div class="search-results">
-      @if (searchResults.length > 0) {
+
+    <div class="search-container">
+      <input type="text" class="search" placeholder="Tìm kiếm bác sĩ, chuyên khoa, bệnh viện..."
+        [(ngModel)]="searchQuery" (input)="onSearchInput()" (click)="onInputClick()">
+      @if (showSearchResults) {
+      <div class="search-results">
+        @if (searchResults.length > 0) {
         @for (item of searchResults; track $index) {
-          <a class="search-link" href="javascript:void(0)" (click)="navigateToSearchResult(item, $event)">
-            <div class="search-item">
-              
-              <!-- Khối chứa Icon nằm sát lề trái -->
-              <div class="search-icon">
-                @if (item.type === 'doctor') { 👨‍⚕️ }
-                @if (item.type === 'hospital') { 🏥 }
-                @if (item.type === 'specialization') { 💊 }
-              </div>
+        <!-- <a class="search-link" href="javascript:void(0)" (click)="navigateToSearchResult(item, $event)"> -->
+        <a class="search-link" href="{{ item.url}}">
+          <div class="search-item">
 
-              <!-- Khối chứa Text nằm căn giữa khoảng trống còn lại -->
-              <div class="search-info">
-                <div class="search-title">{{ item.title }}</div>
-                <div class="search-subtitle" *ngIf="item.subtitle">{{ item.subtitle }}</div>
-              </div>
-
-              <!-- Tạo một khoảng trống giả bên phải bằng độ rộng icon để đẩy khối chữ vào GIỮA TUYỆT ĐỐI -->
-              <div class="search-spacer"></div>
-
+            <!-- Khối chứa Icon nằm sát lề trái -->
+            <div class="search-icon">
+              @if (item.type === 'doctor') { 👨‍⚕️ }
+              @if (item.type === 'hospital') { 🏥 }
+              @if (item.type === 'specialization') { 💊 }
             </div>
-          </a>
-        }
-      }
 
-      @if (searchResults.length === 0) {
+            <!-- Khối chứa Text nằm căn giữa khoảng trống còn lại -->
+            <div class="search-info">
+              <div class="search-title">{{ item.title }}</div>
+              <div class="search-subtitle" *ngIf="item.subtitle">{{ item.subtitle }}</div>
+            </div>
+
+            <!-- Tạo một khoảng trống giả bên phải bằng độ rộng icon để đẩy khối chữ vào GIỮA TUYỆT ĐỐI -->
+            <div class="search-spacer"></div>
+
+          </div>
+        </a>
+        }
+        }
+
+        @if (searchResults.length === 0) {
         <div class="search-item no-result">
           ❌ Không tìm thấy kết quả
         </div>
+        }
+      </div>
       }
     </div>
-  }
-</div>
 
     <ul class="hero-list">
       <li>✔ Đặt khám nhanh - lấy số thứ tự online</li>
@@ -58,148 +54,121 @@
     </ul>
 
     <button class="btn-book" (click)="openBooking()">
-        ĐẶT LỊCH NGAY
+      ĐẶT LỊCH NGAY
     </button>
-</div>
+  </div>
 </section>
 
 @if(isModalOpen){
 <div class="modal">
-    <div class="modal-content">
-        <span class="close" (click)="closeBooking()">&times;</span>
-        <h2>Đặt Lịch Khám</h2>
+  <div class="modal-content">
+    <span class="close" (click)="closeBooking()">&times;</span>
+    <h2>Đặt Lịch Khám</h2>
 
-        <form (ngSubmit)="bookingForm.valid ? submitBooking() : markFormDirty(bookingForm)" #bookingForm="ngForm" novalidate>
-            
-            <input type="hidden" [(ngModel)]="bookingData.doctorUserId" name="doctorUserId">
+    <form (ngSubmit)="bookingForm.valid ? submitBooking() : markFormDirty(bookingForm)" #bookingForm="ngForm"
+      novalidate>
 
-            <label>Họ và Tên <span style="color: red;">*</span></label>
-            <input 
-              type="text" 
-              [(ngModel)]="bookingData.patientName" 
-              name="patientName" 
-              #nameInput="ngModel" 
-              required 
-              placeholder="Nhập họ và tên bệnh nhân">
-            <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched || bookingForm.submitted)" class="error-msg">
-              ❌ Vui lòng nhập họ và tên
-            </div>
+      <input type="hidden" [(ngModel)]="bookingData.doctorUserId" name="doctorUserId">
 
-            <label>Số điện thoại <span style="color: red;">*</span></label>
-            <input 
-              type="text" 
-              [(ngModel)]="bookingData.phone" 
-              name="phone" 
-              #phoneInput="ngModel" 
-              required 
-              pattern="^[0-9]{10,11}$" 
-              placeholder="Nhập số điện thoại liên hệ">
-            <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched || bookingForm.submitted)" class="error-msg">
-              <span *ngIf="phoneInput.errors?.['required']">❌ Vui lòng nhập số điện thoại</span>
-              <span *ngIf="phoneInput.errors?.['pattern']">❌ Số điện thoại phải bao gồm 10 hoặc 11 chữ số</span>
-            </div>
+      <label>Họ và Tên <span style="color: red;">*</span></label>
+      <input type="text" [(ngModel)]="bookingData.patientName" name="patientName" #nameInput="ngModel" required
+        placeholder="Nhập họ và tên bệnh nhân">
+      <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched || bookingForm.submitted)"
+        class="error-msg">
+        ❌ Vui lòng nhập họ và tên
+      </div>
 
-            <label>Bệnh viện <span style="color: red;">*</span></label>
-            <select 
-              [(ngModel)]="bookingData.hospitalId" 
-              name="hospitalId" 
-              #hospitalInput="ngModel" 
-              required>
-                <option value="">-- Chọn bệnh viện --</option>
-                @for(h of hospitals; track h.hospitalId){
-                    <option [value]="h.hospitalId">{{h.name}}</option>
-                }
-            </select>
-            <div *ngIf="hospitalInput.invalid && (hospitalInput.dirty || hospitalInput.touched || bookingForm.submitted)" class="error-msg">
-              ❌ Vui lòng chọn bệnh viện mong muốn
-            </div>
+      <label>Số điện thoại <span style="color: red;">*</span></label>
+      <input type="text" [(ngModel)]="bookingData.phone" name="phone" #phoneInput="ngModel" required
+        pattern="^[0-9]{10,11}$" placeholder="Nhập số điện thoại liên hệ">
+      <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched || bookingForm.submitted)"
+        class="error-msg">
+        <span *ngIf="phoneInput.errors?.['required']">❌ Vui lòng nhập số điện thoại</span>
+        <span *ngIf="phoneInput.errors?.['pattern']">❌ Số điện thoại phải bao gồm 10 hoặc 11 chữ số</span>
+      </div>
 
-            <label>Chuyên khoa <span style="color: red;">*</span></label>
-            <select 
-              [(ngModel)]="bookingData.specializationId" 
-              name="specializationId" 
-              #specInput="ngModel" 
-              required>
-                <option value="">-- Chọn chuyên khoa --</option>
-                @for(s of formSpecializations; track s.specializationId){
-                    <option [value]="s.specializationId">{{s.name}}</option>
-                }
-            </select>
-            <div *ngIf="specInput.invalid && (specInput.dirty || specInput.touched || bookingForm.submitted)" class="error-msg">
-              ❌ Vui lòng chọn chuyên khoa cần khám
-            </div>
+      <label>Bệnh viện <span style="color: red;">*</span></label>
+      <select [(ngModel)]="bookingData.hospitalId" name="hospitalId" #hospitalInput="ngModel" required>
+        <option value="">-- Chọn bệnh viện --</option>
+        @for(h of hospitals; track h.hospitalId){
+        <option [value]="h.hospitalId">{{h.name}}</option>
+        }
+      </select>
+      <div *ngIf="hospitalInput.invalid && (hospitalInput.dirty || hospitalInput.touched || bookingForm.submitted)"
+        class="error-msg">
+        ❌ Vui lòng chọn bệnh viện mong muốn
+      </div>
 
-            <label>Ngày khám <span style="color: red;">*</span></label>
-            <input 
-              type="date" 
-              [min]="todayStr" 
-              [(ngModel)]="bookingData.appointmentDate" 
-              name="appointmentDate" 
-              #dateInput="ngModel" 
-              (change)="validateDateTime()" 
-              required>
-            <div *ngIf="dateInput.invalid && (dateInput.dirty || dateInput.touched || bookingForm.submitted)" class="error-msg">
-              ❌ Vui lòng chọn ngày khám bệnh
-            </div>
+      <label>Chuyên khoa <span style="color: red;">*</span></label>
+      <select [(ngModel)]="bookingData.specializationId" name="specializationId" #specInput="ngModel" required>
+        <option value="">-- Chọn chuyên khoa --</option>
+        @for(s of formSpecializations; track s.specializationId){
+        <option [value]="s.specializationId">{{s.name}}</option>
+        }
+      </select>
+      <div *ngIf="specInput.invalid && (specInput.dirty || specInput.touched || bookingForm.submitted)"
+        class="error-msg">
+        ❌ Vui lòng chọn chuyên khoa cần khám
+      </div>
 
-            <label>Giờ khám <span style="color: red;">*</span></label>
-            <input 
-              type="time" 
-              [(ngModel)]="bookingData.appointmentTime" 
-              name="appointmentTime" 
-              #timeInput="ngModel" 
-              (change)="validateDateTime()" 
-              required>
-            <div *ngIf="timeInput.invalid && (timeInput.dirty || timeInput.touched || bookingForm.submitted)" class="error-msg">
-              ❌ Vui lòng chọn khung giờ khám bệnh
-            </div>
+      <label>Ngày khám <span style="color: red;">*</span></label>
+      <input type="date" [min]="todayStr" [(ngModel)]="bookingData.appointmentDate" name="appointmentDate"
+        #dateInput="ngModel" (change)="validateDateTime()" required>
+      <div *ngIf="dateInput.invalid && (dateInput.dirty || dateInput.touched || bookingForm.submitted)"
+        class="error-msg">
+        ❌ Vui lòng chọn ngày khám bệnh
+      </div>
 
-            <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-                {{ isSubmitting ? 'Đang xử lý...' : 'Xác nhận đặt lịch' }}
-            </button>
-        </form>
-    </div>
+      <label>Giờ khám <span style="color: red;">*</span></label>
+      <input type="time" [(ngModel)]="bookingData.appointmentTime" name="appointmentTime" #timeInput="ngModel"
+        (change)="validateDateTime()" required>
+      <div *ngIf="timeInput.invalid && (timeInput.dirty || timeInput.touched || bookingForm.submitted)"
+        class="error-msg">
+        ❌ Vui lòng chọn khung giờ khám bệnh
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Đang xử lý...' : 'Xác nhận đặt lịch' }}
+      </button>
+    </form>
+  </div>
 </div>
 }
 
 <section class="services">
-    <div class="container">
-        <div class="cards">
-            <a routerLink="/pages/DVYT/dkcs">
-                <div class="card">
-                    📅 <p>Đặt khám tại cơ sở</p>
-                </div>
-            </a>
-            <a routerLink="/pages/DVYT/dkck">
-                <div class="card">
-                    💊 <p>Đặt khám chuyên khoa</p>
-                </div>
-            </a>
-            <a routerLink="/pages/DVYT/dkbs">
-                <div class="card">
-                    👨‍⚕️ <p>Đặt khám theo bác sĩ</p>
-                </div>
-            </a>
+  <div class="container">
+    <div class="cards">
+      <a routerLink="/pages/DVYT/dkcs">
+        <div class="card">
+          📅 <p>Đặt khám tại cơ sở</p>
         </div>
+      </a>
+      <a routerLink="/pages/DVYT/dkck">
+        <div class="card">
+          💊 <p>Đặt khám chuyên khoa</p>
+        </div>
+      </a>
+      <a routerLink="/pages/DVYT/dkbs">
+        <div class="card">
+          👨‍⚕️ <p>Đặt khám theo bác sĩ</p>
+        </div>
+      </a>
     </div>
+  </div>
 </section>
 
 <section class="specialties">
-    <h2>CHUYÊN KHOA</h2>
-    <div class="grid">
-        
-        @for (name of specialties; track name) {
-            <a class="item" 
-               href="https://medpro.vn/tim-kiem?kw={{ name }}&tab=subject&page=1" 
-               target="_blank" 
-               rel="noopener noreferrer">
-               
-                <img [src]="getIconPath(name)" 
-                     [alt]="name" 
-                     (error)="onImgError($event)">
-                     
-                <p>{{ name }}</p>
-            </a>
-        }
-    </div>
+  <h2>CHUYÊN KHOA</h2>
+  <div class="grid">
+
+    @for (name of specialties; track name) {
+    <a class="item" href="https://medpro.vn/tim-kiem?kw={{ name }}&tab=subject&page=1" target="_blank"
+      rel="noopener noreferrer">
+
+      <img [src]="getIconPath(name)" [alt]="name" (error)="onImgError($event)">
+
+      <p>{{ name }}</p>
+    </a>
+    }
+  </div>
 </section>

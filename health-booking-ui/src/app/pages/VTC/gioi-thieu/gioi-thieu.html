@@ -1,0 +1,82 @@
+<div class="page-gioithieu">
+  <header class="hero-banner">
+    <div class="container">
+      <h1>Chào mừng bạn đến với HealthMeet</h1>
+      <h2>Công ty Cổ phần HM</h2>
+
+      <div class="app-screenshot-left">
+        <img src="assets/images/footer/anhhealthmeet.jpg" alt="Màn hình ứng dụng HealthMeet">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section-intro-pkh">
+      <div class="container layout-grid-2">
+        <div class="content">
+          <h3>Giải pháp y tế thông minh</h3>
+          <p>
+            Ứng dụng này giúp người bệnh và thân nhân người bệnh
+            có thể thực hiện trực tuyến việc đặt lịch, thanh toán
+            và quản lý hồ sơ sức khỏe một cách tiện lợi.
+          </p>
+
+          <div class="feature-cards">
+            @for (feature of features; track $index) {
+              <div class="card-feature">
+                <span>{{ $index + 1 }}</span>
+                <p>{{ feature }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="image-doctors">
+          <img src="assets/images/footer/doingubs.jpg" alt="Đội ngũ bác sĩ">
+        </div>
+      </div>
+    </section>
+
+    <section class="section-mission-vision">
+      <div class="container flex-space-between">
+        <div class="vision-box">
+          <h2>Tầm Nhìn</h2>
+        <p>
+  Công ty Cổ phần HM trở thành công ty cung cấp giải pháp công nghệ
+  hàng đầu tại Việt Nam và khu vực Đông Nam Á giúp kết nối các dịch vụ
+  y tế đến rộng rãi người dân, mang lại hiệu quả đột phá.
+</p>
+        </div>
+
+        <div class="mission-box">
+          <h2>Sứ mệnh</h2>
+          <p>
+  Công ty Cổ phần HM cung cấp nền tảng HealthMeet - giải pháp tiếp cận
+  y tế thông minh mang đến cho người dùng những phương thức chăm sóc
+  sức khỏe mới ở bất cứ không gian và thời gian nào.
+</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-philosophy">
+      <div class="container">
+        <h2>Triết lý sản phẩm - dịch vụ</h2>
+        <img src="assets/images/footer/triết lý sp -dv.png" alt="Triết lí sp-dv" class="intro-healthmeet">
+      </div>
+    </section>
+
+    <section class="section-partners">
+      <div class="container">
+        <h2>Các bệnh viện tiêu biểu</h2>
+        <div class="hospitals-carousel">
+          @for (hospital of hospitals; track hospital.name) {
+            <div class="hospital-logo">
+              <img [src]="hospital.logo" [alt]="hospital.name" />
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

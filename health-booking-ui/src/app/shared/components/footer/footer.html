@@ -2,7 +2,7 @@
   <div class="footer-main">
 
     <div class="footer-left">
-      <a routerLink="/">
+      <a routerLink="/" onclick="window.scrollTo(0, 0)">
         <h2 class="logo">
           <img src="assets/images/logo.png" alt="Logo HealthBooking">
         </h2>
@@ -23,7 +23,7 @@
           <h3>Dịch vụ Y tế</h3>
           <ul>
             <li *ngFor="let dv of dichVu">
-              <a [routerLink]="dv.link">{{ dv.name }}</a>
+              <a [routerLink]="dv.link" onclick="window.scrollTo(0, 0)">{{ dv.name }}</a>
             </li>
           </ul>
         </div>
@@ -32,7 +32,7 @@
           <h3>Cơ sở y tế</h3>
           <ul>
             <li *ngFor="let cs of coSo">
-              <a [routerLink]="cs.link">{{ cs.name }}</a>
+              <a [routerLink]="cs.link" onclick="window.scrollTo(0, 0)">{{ cs.name }}</a>
             </li>
           </ul>
         </div>
@@ -41,7 +41,7 @@
           <h3>Hướng dẫn</h3>
           <ul>
             <li *ngFor="let hd of huongDan">
-              <a [routerLink]="hd.link">{{ hd.name }}</a>
+              <a [routerLink]="hd.link" onclick="window.scrollTo(0, 0)">{{ hd.name }}</a>
             </li>
           </ul>
         </div>
@@ -54,7 +54,7 @@
           <h3>Liên hệ hợp tác</h3>
           <ul>
             <li *ngFor="let lh of lienHe">
-              <a [routerLink]="lh.link">{{ lh.name }}</a>
+              <a [routerLink]="lh.link" onclick="window.scrollTo(0, 0)">{{ lh.name }}</a>
             </li>
           </ul>
         </div>
@@ -63,7 +63,7 @@
           <h3>Về Trang chủ</h3>
           <ul>
             <li *ngFor="let tc of trangChu">
-              <a [routerLink]="tc.link">{{ tc.name }}</a>
+              <a [routerLink]="tc.link" onclick="window.scrollTo(0, 0)">{{ tc.name }}</a>
             </li>
           </ul>
         </div>
@@ -84,7 +84,3 @@
 <div class="footer-bottom">
   © 2020 - Bản quyền thuộc Công Ty Cổ Phần Ứng Dụng HealthBooking
 </div>
-
-<!-- <a href="tel:0123456789" class="phone-button">
-  <i class="fas fa-phone"></i>
-</a> -->
