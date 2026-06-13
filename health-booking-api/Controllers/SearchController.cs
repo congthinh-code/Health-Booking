@@ -35,7 +35,7 @@ namespace health_booking_api.Controllers
                     id = d.DoctorId,
                     title = d.FullName,
                     subtitle = d.Specialization != null ? d.Specialization.Name : "Bác sĩ",
-                    url = "/DVYT/ĐKBS?id=" + d.DoctorId
+                    url = "/pages/DVYT/dkbs?doctorId=" + d.DoctorId
                 })
                 .Take(5)
                 .ToListAsync();
@@ -51,7 +51,7 @@ namespace health_booking_api.Controllers
                     id = h.HospitalId,
                     title = h.Name,
                     subtitle = h.Address,
-                    url = "/DVYT/ĐKCS?hospitalId=" + h.HospitalId
+                    url = "/pages/DVYT/dkcs?hospitalId" + h.HospitalId
                 })
                 .Take(5)
                 .ToListAsync();
@@ -65,7 +65,7 @@ namespace health_booking_api.Controllers
                     id = s.SpecializationId,
                     title = s.Name,
                     subtitle = "Chuyên khoa",
-                    url = "/DVYT/ĐKCK?specializationId=" + s.SpecializationId
+                    url = "/pages/DVYT/dkck?specializationId" + s.SpecializationId
                 })
                 .Take(5)
                 .ToListAsync();
